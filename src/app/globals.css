@@ -1,26 +1,90 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Mercedes-dark livery — locked palette */
+  --color-bg: #0e1413;
+  --color-panel: #17201e;
+  --color-panel-raised: #1d2725;
+  --color-ink: #e9eeec;
+  --color-muted: #93a29d;
+  --color-muted-2: #5f6d68;
+  --color-line: #25302d;
+  --color-line-strong: #35433f;
+  --color-accent: #00d2be;
+  --color-on-accent: #04100e;
+
+  /* semantic timing colours */
+  --color-purple: #c56bf0;
+  --color-green: #25d98a;
+  --color-yellow: #f2c230;
+  --color-red: #e8402a;
+
+  --space-section: clamp(4rem, 3rem + 5vw, 8rem);
+  --content-max: 68rem;
+
+  --duration-fast: 150ms;
+  --duration-normal: 320ms;
+  --duration-slow: 700ms;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-bg: var(--color-bg);
+  --color-panel: var(--color-panel);
+  --color-panel-raised: var(--color-panel-raised);
+  --color-ink: var(--color-ink);
+  --color-muted: var(--color-muted);
+  --color-muted-2: var(--color-muted-2);
+  --color-line: var(--color-line);
+  --color-line-strong: var(--color-line-strong);
+  --color-accent: var(--color-accent);
+  --color-on-accent: var(--color-on-accent);
+  --color-purple: var(--color-purple);
+  --color-green: var(--color-green);
+  --color-yellow: var(--color-yellow);
+  --color-red: var(--color-red);
+
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+
+  --max-width-content: var(--content-max);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+* {
+  border-color: var(--color-line);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-ink);
+  font-family: var(--font-body), system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
