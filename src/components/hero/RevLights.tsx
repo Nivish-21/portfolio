@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useSyncExternalStore } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 const SEGMENTS = 12;
@@ -19,41 +19,41 @@ const TONE_CLASS: Record<"g" | "y" | "r", string> = {
   r: "bg-red",
 };
 
+function subscribe(callback: () => void) {
+  let frame: number | null = null;
+  const onChange = () => {
+    if (frame === null) {
+      frame = requestAnimationFrame(() => {
+        frame = null;
+        callback();
+      });
+    }
+  };
+  window.addEventListener("scroll", onChange, { passive: true });
+  window.addEventListener("resize", onChange, { passive: true });
+  return () => {
+    window.removeEventListener("scroll", onChange);
+    window.removeEventListener("resize", onChange);
+    if (frame !== null) cancelAnimationFrame(frame);
+  };
+}
+
+function getSnapshot(): number {
+  const doc = document.documentElement;
+  const scrollable = doc.scrollHeight - doc.clientHeight;
+  const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
+  return Math.round(Math.min(1, Math.max(0, progress)) * SEGMENTS);
+}
+
+function getServerSnapshot(): number {
+  return 0;
+}
+
 /** Rev-light strip that doubles as the page scroll-progress indicator. */
 export function RevLights() {
-  const [lit, setLit] = useState(0);
+  const scrollLit = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const reducedMotion = useReducedMotion();
-  const frameRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (reducedMotion) {
-      setLit(SEGMENTS);
-      return;
-    }
-
-    const updateProgress = () => {
-      const doc = document.documentElement;
-      const scrollable = doc.scrollHeight - doc.clientHeight;
-      const progress = scrollable > 0 ? window.scrollY / scrollable : 0;
-      setLit(Math.round(Math.min(1, Math.max(0, progress)) * SEGMENTS));
-      frameRef.current = null;
-    };
-
-    const onScroll = () => {
-      if (frameRef.current === null) {
-        frameRef.current = requestAnimationFrame(updateProgress);
-      }
-    };
-
-    updateProgress();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-      if (frameRef.current !== null) cancelAnimationFrame(frameRef.current);
-    };
-  }, [reducedMotion]);
+  const lit = reducedMotion ? SEGMENTS : scrollLit;
 
   return (
     <div

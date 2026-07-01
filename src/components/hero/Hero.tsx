@@ -52,7 +52,7 @@ export function Hero() {
             animate ? "opacity-100" : "opacity-0"
           }`}
         >
-          // build first &middot; optimise later — the same loop in code, on the track, on the run
+          {"// build first · optimise later — the same loop in code, on the track, on the run"}
         </p>
 
         <div

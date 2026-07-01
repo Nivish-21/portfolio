@@ -19,12 +19,7 @@ function CountStat({ label, target, suffix, delayMs }: StatProps) {
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
-
-    if (reducedMotion) {
-      setValue(target);
-      return;
-    }
+    if (!el || reducedMotion) return;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -52,11 +47,14 @@ function CountStat({ label, target, suffix, delayMs }: StatProps) {
     return () => observer.disconnect();
   }, [target, delayMs, reducedMotion]);
 
+  const displayValue = reducedMotion ? target : value;
+
   return (
     <div ref={ref} className="px-5 py-3 border-r border-line-strong last:border-r-0">
       <div className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted">{label}</div>
       <div className="font-display font-bold text-3xl leading-tight tabular-nums">
-        {String(value).padStart(2, "0")} <small className="text-sm font-medium text-muted">{suffix}</small>
+        {String(displayValue).padStart(2, "0")}{" "}
+        <small className="text-sm font-medium text-muted">{suffix}</small>
       </div>
     </div>
   );
