@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useSectorTimingContext } from "@/context/SectorTimingContext";
 
 export type SectorStatus = "pending" | "yellow" | "green" | "purple";
 
@@ -19,20 +20,39 @@ function grade(dwellMs: number, targetMs: number): SectorStatus {
 }
 
 /**
- * Times how long a visitor actively dwells on a section and grades it against
- * a target read time using F1 timing-tower semantics: yellow (skimmed),
- * green (read it), purple (hit the ideal read window). Pauses on tab-hidden
- * and on idle so away-time never inflates the reading credit.
+ * Times how long a visitor actively dwells on a section and updates the global
+ * SectorTimingContext. Pauses on tab-hidden and on idle so away-time never
+ * inflates the reading credit. Throttles context updates to maintain performance.
  */
-export function useSectorTiming(targetSeconds: number) {
+export function useSectorTiming(
+  id: string,
+  label: string,
+  title: string,
+  targetSeconds: number
+) {
+  const { registerSector, updateSectorTime, sectors } = useSectorTimingContext();
   const ref = useRef<HTMLElement | null>(null);
-  const [status, setStatus] = useState<SectorStatus>("pending");
+
+  // Read status from context
+  const sectorData = sectors[id];
+  const status = sectorData ? sectorData.status : "pending";
+
+  const statusRef = useRef(status);
+  useEffect(() => {
+    statusRef.current = status;
+  }, [status]);
 
   const dwellMsRef = useRef(0);
   const lastTickRef = useRef<number | null>(null);
   const isActiveRef = useRef(false);
   const isIdleRef = useRef(false);
   const idleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastContextUpdateRef = useRef(0);
+
+  // Register on mount
+  useEffect(() => {
+    registerSector(id, label, title, targetSeconds);
+  }, [id, label, title, targetSeconds, registerSector]);
 
   useEffect(() => {
     const el = ref.current;
@@ -52,15 +72,28 @@ export function useSectorTiming(targetSeconds: number) {
     const tick = (now: number) => {
       const running =
         isActiveRef.current && !isIdleRef.current && document.visibilityState === "visible";
+      const nowMs = performance.now();
 
       if (running) {
         if (lastTickRef.current !== null) {
           dwellMsRef.current += now - lastTickRef.current;
-          const next = grade(dwellMsRef.current, targetMs);
-          setStatus((prev) => (prev === next ? prev : next));
+          const nextStatus = grade(dwellMsRef.current, targetMs);
+
+          const statusChanged = nextStatus !== statusRef.current;
+          const shouldThrottleUpdate = nowMs - lastContextUpdateRef.current > 250;
+
+          if (statusChanged || shouldThrottleUpdate) {
+            updateSectorTime(id, dwellMsRef.current, nextStatus);
+            lastContextUpdateRef.current = nowMs;
+          }
         }
         lastTickRef.current = now;
       } else {
+        if (lastTickRef.current !== null) {
+          const nextStatus = grade(dwellMsRef.current, targetMs);
+          updateSectorTime(id, dwellMsRef.current, nextStatus);
+          lastContextUpdateRef.current = nowMs;
+        }
         lastTickRef.current = null;
       }
 
@@ -71,7 +104,7 @@ export function useSectorTiming(targetSeconds: number) {
       ([entry]) => {
         isActiveRef.current = entry.isIntersecting;
       },
-      { threshold: ACTIVE_THRESHOLD },
+      { threshold: ACTIVE_THRESHOLD }
     );
     observer.observe(el);
 
@@ -87,7 +120,7 @@ export function useSectorTiming(targetSeconds: number) {
       activityEvents.forEach((evt) => window.removeEventListener(evt, resetIdleTimer));
       if (idleTimerRef.current) clearTimeout(idleTimerRef.current);
     };
-  }, [targetSeconds]);
+  }, [id, targetSeconds, updateSectorTime]);
 
   return { ref, status };
 }

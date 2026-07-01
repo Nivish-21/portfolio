@@ -15,7 +15,7 @@ interface SectionProps {
 }
 
 export function Section({ id, sectorLabel, title, meta, targetSeconds, children }: SectionProps) {
-  const { ref, status } = useSectorTiming(targetSeconds);
+  const { ref, status } = useSectorTiming(id, sectorLabel, title, targetSeconds);
 
   return (
     <section
