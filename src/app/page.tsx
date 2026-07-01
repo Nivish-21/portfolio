@@ -6,12 +6,13 @@ import { Skills } from "@/components/sections/Skills";
 import { PersonalBeat } from "@/components/sections/PersonalBeat";
 import { LapSummary } from "@/components/sections/LapSummary";
 import { Contact } from "@/components/sections/Contact";
+import { RaceEngineerConsole } from "@/components/sections/RaceEngineerConsole";
 import { SectorTimingProvider } from "@/context/SectorTimingContext";
 
 export default function Home() {
   return (
     <SectorTimingProvider>
-      <div className="flex flex-col flex-1">
+      <div className="flex flex-col flex-1 relative">
         <TopBar />
         <Hero />
         <main className="flex flex-col gap-[var(--space-section)] pb-[var(--space-section)]">
@@ -22,6 +23,7 @@ export default function Home() {
           <LapSummary />
           <Contact />
         </main>
+        <RaceEngineerConsole />
       </div>
     </SectorTimingProvider>
   );
