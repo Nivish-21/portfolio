@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { RevLights } from "./RevLights";
 import { TelemetryTrace } from "./TelemetryTrace";
-import { Hud } from "./Hud";
+// import { Hud } from "./Hud";
 
 export function Hero() {
   const [animate, setAnimate] = useState(false);
@@ -14,7 +14,7 @@ export function Hero() {
   }, []);
 
   return (
-    <header className="relative pt-10 pb-6 overflow-hidden">
+    <header className="snap-section relative pt-10 pb-6 overflow-hidden">
       <TelemetryTrace />
       <div className="relative mx-auto w-full max-w-content px-6 md:px-8">
         <div className="mb-2">
@@ -23,7 +23,7 @@ export function Hero() {
 
         <div className="flex items-center gap-2.5 font-mono text-[11px] tracking-[0.18em] uppercase text-muted mt-5 mb-4">
           <span className="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true" />
-          building in public &middot; one commit at a time
+          AI-native builder &middot; ships fast, 0 &rarr; 1
         </div>
 
         <h1 className="font-display font-extrabold uppercase leading-[0.92] text-[clamp(2.75rem,9vw,7.5rem)] tracking-[0.004em]">
@@ -48,20 +48,29 @@ export function Hero() {
         </h1>
 
         <p
+          className={`font-mono text-sm tracking-[0.05em] text-ink mt-4 transition-opacity duration-500 delay-[450ms] ${
+            animate ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          Nivish Vincent Raj{" "}
+          <span className="text-muted">— Founding CTO &amp; Backend Engineer, based in Tamil Nadu, India</span>
+        </p>
+
+        <p
           className={`font-mono text-[13px] tracking-[0.06em] text-muted mt-5 transition-opacity duration-500 delay-500 ${
             animate ? "opacity-100" : "opacity-0"
           }`}
         >
-          {"// build first · optimise later — the same loop in code, on the track, on the run"}
+          {"// build first · optimise later"}
         </p>
 
-        <div
+        {/* <div
           className={`transition-[transform,opacity] duration-500 delay-[550ms] ${
             animate ? "translate-y-0 opacity-100" : "translate-y-2.5 opacity-0"
           }`}
         >
           <Hud />
-        </div>
+        </div> */}
       </div>
     </header>
   );

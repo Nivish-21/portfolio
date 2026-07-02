@@ -6,8 +6,8 @@
   --color-panel: #17201e;
   --color-panel-raised: #1d2725;
   --color-ink: #e9eeec;
-  --color-muted: #93a29d;
-  --color-muted-2: #5f6d68;
+  --color-muted: #a5b4af;
+  --color-muted-2: #869590;
   --color-line: #25302d;
   --color-line-strong: #35433f;
   --color-accent: #00d2be;
@@ -17,7 +17,7 @@
   --color-purple: #c56bf0;
   --color-green: #25d98a;
   --color-yellow: #f2c230;
-  --color-red: #e8402a;
+  --color-red: #ea5a44;
 
   --space-section: clamp(4rem, 3rem + 5vw, 8rem);
   --content-max: 68rem;
@@ -57,11 +57,21 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+}
+
+.snap-section {
+  scroll-snap-align: start;
+  /* Matches TopBar's sticky h-14 (56px) plus breathing room — without this the
+     snapped section's top (where the sector marker + heading live) lands
+     underneath the sticky header and is visually clipped/hidden. */
+  scroll-margin-top: 4.5rem;
 }
 
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+    scroll-snap-type: none;
   }
   *,
   *::before,
@@ -84,7 +94,24 @@ body {
   color: var(--color-on-accent);
 }
 
-:focus-visible {
+/* Element-qualified so this beats the browser's own higher-specificity
+   default focus styling on anchors (a bare `:focus-visible` loses to it).
+   `transition: outline-color 0s` stops Tailwind's `.transition-colors`
+   utility (which includes outline-color) from interpolating away from
+   the wrong starting color when outline-style flips none -> solid. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
   outline: 2px solid var(--color-accent);
   outline-offset: 2px;
+  transition: outline-color 0s;
+}
+
+@keyframes sector-ping {
+  0% { transform: scaleY(1); }
+  40% { transform: scaleY(1.8); }
+  100% { transform: scaleY(1); }
 }

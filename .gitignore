@@ -42,3 +42,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# stray runtime lock files (not project content)
+.claude/scheduled_tasks.lock
+
+# internal working docs / process notes / personal files — this repo is public,
+# keep it to code only
+/docs/
+/PRODUCT.md
+.gstack/

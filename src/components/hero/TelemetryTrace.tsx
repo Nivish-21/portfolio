@@ -43,6 +43,15 @@ export function TelemetryTrace() {
       preserveAspectRatio="none"
       aria-hidden="true"
     >
+      <defs>
+        <filter id="telemetry-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur" />
+          <feMerge>
+            <feMergeNode in="blur" />
+            <feMergeNode in="SourceGraphic" />
+          </feMerge>
+        </filter>
+      </defs>
       <path
         ref={pathRef}
         d={PATH_D}
@@ -50,6 +59,7 @@ export function TelemetryTrace() {
         stroke="var(--color-accent)"
         strokeWidth={2}
         strokeOpacity={0.6}
+        filter="url(#telemetry-glow)"
       />
     </svg>
   );

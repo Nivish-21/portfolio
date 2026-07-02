@@ -10,7 +10,7 @@ const LINKS = [
 
 export function Contact() {
   return (
-    <Section id="contact" sectorLabel="S5" title="Radio check" targetSeconds={6}>
+    <Section id="contact" sectorLabel="S5" title="Radio check">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
         {/* Left: Diagnostics & Signal Links */}
         <div>

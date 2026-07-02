@@ -1,28 +1,65 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
+
+const contactSchema = z.object({
+  name: z.string().trim().min(1, "Call sign required.").max(100, "Call sign too long."),
+  email: z.string().trim().email("Invalid return channel path.").max(255),
+  message: z.string().trim().min(1, "Transmission content empty.").max(5000, "Transmission too long."),
+});
+
+const RATE_LIMIT_WINDOW_MS = 60_000;
+const RATE_LIMIT_MAX_REQUESTS = 5;
+// Per-instance, in-memory limiter: best-effort deterrent against a single
+// abusive client, not a distributed rate limit. Fine at portfolio scale;
+// Fluid Compute reuses this instance across requests so it isn't a no-op.
+const requestLog = new Map<string, number[]>();
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const timestamps = (requestLog.get(ip) ?? []).filter(
+    (t) => now - t < RATE_LIMIT_WINDOW_MS
+  );
+  timestamps.push(now);
+
+  if (timestamps.length > RATE_LIMIT_MAX_REQUESTS) {
+    requestLog.set(ip, timestamps);
+    return true;
+  }
+
+  requestLog.set(ip, timestamps);
+  // Bound memory growth: drop entries that have aged out entirely.
+  for (const [key, value] of requestLog) {
+    if (value.every((t) => now - t >= RATE_LIMIT_WINDOW_MS)) {
+      requestLog.delete(key);
+    }
+  }
+  return false;
+}
 
 export async function POST(request: Request) {
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+
+  if (isRateLimited(ip)) {
+    return NextResponse.json(
+      { success: false, error: "Too many transmissions. Wait before retrying." },
+      { status: 429 }
+    );
+  }
+
   try {
     const body = await request.json();
-    const { name, email, message } = body;
+    const parsed = contactSchema.safeParse(body);
 
-    // Basic validation
-    if (!name || !email || !message) {
+    if (!parsed.success) {
       return NextResponse.json(
-        { success: false, error: "Missing required transmission components." },
+        { success: false, error: parsed.error.issues[0]?.message ?? "Invalid transmission." },
         { status: 400 }
       );
     }
 
-    // Process submission: Log radio transmission in server logs
-    console.log("\n====================================");
-    console.log("🏎️  INCOMING PIT-TO-CAR TRANSMISSION");
-    console.log(`[Time]  ${new Date().toISOString()}`);
-    console.log(`[Call Sign]      ${name}`);
-    console.log(`[Return Channel] ${email}`);
-    console.log("------------------------------------");
-    console.log("[Content]");
-    console.log(message);
-    console.log("====================================\n");
+    // Deliberately not logging name/email/message: these are the sender's
+    // personal data and have no reason to sit in server logs.
+    console.log(`[Pit-to-car] transmission received at ${new Date().toISOString()}`);
 
     return NextResponse.json({
       success: true,

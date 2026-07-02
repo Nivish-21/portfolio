@@ -1,0 +1,86 @@
+{
+  "P.02": [
+    {
+      "version": 1,
+      "message": "D16-D17: LLM judges for Coverage + Adjudicator, criterion 5 peer-discovery, criterion 6 all pass"
+    },
+    {
+      "version": 2,
+      "message": "Web: show LLM reasoning in relay cards; sandbox gated on button click with 2s delay"
+    },
+    {
+      "version": 3,
+      "message": "Stack agent cards vertically, show LLM reasoning expanded with scroll"
+    }
+  ],
+  "P.03": [
+    {
+      "version": 1,
+      "message": "docs: update status — deployment complete, Maps key verified in bundle"
+    },
+    {
+      "version": 2,
+      "message": "fix: resolve 'Publishing...' hang on issue submit"
+    },
+    {
+      "version": 3,
+      "message": "fix: reduce storage upload timeout from 20s to 8s"
+    }
+  ],
+  "P.06": [
+    {
+      "version": 1,
+      "message": "docs: add Task 39 (Sources Sought / RFI ingestion) plan — awaiting approval"
+    },
+    {
+      "version": 2,
+      "message": "docs: Task 39 planned, build next session (2 decisions pending); refresh handoff"
+    },
+    {
+      "version": 3,
+      "message": "feat: Sources Sought / RFI ingestion (Task 39)"
+    }
+  ],
+  "P.01": [
+    {
+      "version": 1,
+      "message": "CLI: format scan outputs in compact tabular diagnostic view"
+    },
+    {
+      "version": 2,
+      "message": "Audit: improve parse speeds for 100k line vulnerability logs"
+    },
+    {
+      "version": 3,
+      "message": "EPSS: integrate CISA KEV data stream to override CVSS severity rankings"
+    }
+  ],
+  "P.04": [
+    {
+      "version": 1,
+      "message": "Score: adjust rejection weights for incomplete field metrics"
+    },
+    {
+      "version": 2,
+      "message": "Copilot: conversational form generator with rejection-risk check"
+    },
+    {
+      "version": 3,
+      "message": "Forms: PDF field mapping system for multi-country application forms"
+    }
+  ],
+  "P.05": [
+    {
+      "version": 1,
+      "message": "Scoring: introduce 12-factor candidate verification for bulk images"
+    },
+    {
+      "version": 2,
+      "message": "Resilience: checkpoint download row indices to resume scraping safely on crash"
+    },
+    {
+      "version": 3,
+      "message": "Performance: convert database loops from O(n) check queries to O(1) set caches"
+    }
+  ]
+}

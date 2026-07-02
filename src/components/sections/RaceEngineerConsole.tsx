@@ -2,19 +2,21 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useRaceEngineer } from "@/hooks/useRaceEngineer";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 export function RaceEngineerConsole() {
   const [isOpen, setIsOpen] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const { history, runCommand } = useRaceEngineer();
   const consoleEndRef = useRef<HTMLDivElement | null>(null);
+  const reducedMotion = useReducedMotion();
 
   // Auto-scroll to bottom of terminal
   useEffect(() => {
     if (consoleEndRef.current) {
-      consoleEndRef.current.scrollIntoView({ behavior: "smooth" });
+      consoleEndRef.current.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth" });
     }
-  }, [history, isOpen]);
+  }, [history, isOpen, reducedMotion]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,7 +69,12 @@ export function RaceEngineerConsole() {
           </div>
 
           {/* Terminal output console */}
-          <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-2 relative z-10 select-text">
+          <div
+            role="log"
+            aria-label="Race engineer console output"
+            aria-live="polite"
+            className="flex-1 overflow-y-auto p-4 flex flex-col gap-2 relative z-10 select-text"
+          >
             {history.map((line, idx) => (
               <div key={idx} className={`leading-relaxed break-words ${getLineColor(line.type)}`}>
                 {line.type === "input" && <span className="text-accent/60 mr-2">$</span>}
@@ -88,7 +95,8 @@ export function RaceEngineerConsole() {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Type message or /commands..."
-              className="flex-1 bg-transparent border-none text-accent focus:outline-none placeholder-accent/40 font-mono text-xs w-full"
+              aria-label="Command input"
+              className="flex-1 bg-transparent border-none text-accent focus:outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-accent focus-visible:outline-offset-2 placeholder-accent/40 font-mono text-xs w-full"
               autoFocus
               disabled={!isOpen}
             />

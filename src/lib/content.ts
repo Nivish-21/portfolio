@@ -13,113 +13,173 @@ export interface Project {
   result: string;
   resultTone: "mark" | "gain" | "best";
   href?: string;
+  repo?: string;
 }
 
 export const projects: Project[] = [
   {
     code: "P.01",
-    name: "CaboCab — offline write resilience",
+    name: "vulntriage — CVE re-ranking",
     summary:
-      "Writes failed during the Sept 2025 Red Sea cable-cut outages. Queued locally, synced automatically on reconnect — designing for the network you actually have, not the one you wish you had.",
-    baseline: "writes failing during outages",
-    optimised: "queued + auto-sync on reconnect",
-    result: "6 districts, 2 apps, live in production",
+      "pip-audit ranks every CVE by raw CVSS. vulntriage re-ranks by real exploitability using NVD, CISA KEV, and EPSS — so you fix what's actually reachable first.",
+    baseline: "raw CVSS, alert fatigue",
+    optimised: "reachable-first, real exploitability",
+    result: "published on PyPI, real users",
     resultTone: "best",
+    repo: "https://github.com/Nivish-21/vulntriage",
   },
   {
     code: "P.02",
-    name: "vulntriage — CVE re-ranking",
+    name: "ClaimBand — multi-agent claims adjudication",
     summary:
-      "pip-audit dumps every known CVE, ranked by raw CVSS. vulntriage re-ranks by real exploitability using NVD, CISA KEV, and EPSS data, so you fix what's actually reachable in your code first.",
-    baseline: "raw CVSS, alert fatigue",
-    optimised: "reachable-first, real exploitability",
-    result: "published on PyPI, runs on your own CLI subscription",
-    resultTone: "best",
+      "Built for the Band of Agents Hackathon in a week. Four agents, three frameworks, one shared context room for insurance claims — with a full audit trail.",
+    baseline: "single framework, no trust",
+    optimised: "shared room, structured hand-offs",
+    result: "approve, deny, escalate — traceable",
+    resultTone: "gain",
+    repo: "https://github.com/Nivish-21/Band-of-agents",
   },
   {
     code: "P.03",
-    name: "ClaimBand — multi-agent claims adjudication",
+    name: "civichero — gamified civic triage",
     summary:
-      "Built for the Band of Agents Hackathon in a week. Four agents, three different frameworks (LangGraph, Gemini SDK, CrewAI), coordinating over one shared context room for insurance claims — with a full audit trail.",
-    baseline: "single-framework, no cross-agent trust",
-    optimised: "shared room, structured hand-offs, audit trail",
-    result: "APPROVE / DENY / ESCALATE, traceable end to end",
+      "Built for the BlockseBlock hackathon. Citizens photograph a civic problem, Gemini Vision triages it in seconds, an agent plans the fix, and a community loop closes it.",
+    baseline: "manual reporting, no routing",
+    optimised: "Gemini triage, agentic resolution",
+    result: "XP, achievements, real engagement",
     resultTone: "gain",
+    repo: "https://github.com/Nivish-21/civichero",
   },
   {
     code: "P.04",
-    name: "civichero — gamified civic triage",
+    name: "QueueCutter — AI paperwork copilot",
     summary:
-      "Built for the BlockseBlock hackathon. Citizens photograph a civic problem, Gemini Vision triages it in under 2 seconds, an agent plans the resolution, and a 3-role community loop closes the ticket.",
-    baseline: "manual civic reporting, no routing",
-    optimised: "Gemini triage + agentic resolution plan",
-    result: "XP, achievements, leaderboard — real community loop",
+      "Government forms across the US, India, and the UK are confusing by design. QueueCutter turns them into a guided conversation and a ready-to-submit, rejection-scored PDF.",
+    baseline: "bureaucratic forms, high rejection",
+    optimised: "guided conversation, risk scoring",
+    result: "7 forms, 3 countries, live",
     resultTone: "gain",
   },
   {
     code: "P.05",
-    name: "QueueCutter — AI paperwork copilot",
+    name: "Scraper — crash-resilient bulk image pull",
     summary:
-      "Government forms across the US, India, and the UK are confusing by design. QueueCutter turns them into a guided conversation, scores rejection risk, and produces a ready-to-submit filled PDF.",
-    baseline: "bureaucratic forms, high rejection rates",
-    optimised: "guided conversation + rejection-risk scoring",
-    result: "7 forms, 3 countries, escalation paths built in",
+      "Bulk image downloads across 100k+ row datasets. Started as one script; five files later, each one exists because something broke in production last time.",
+    baseline: "O(n) checks, no resume",
+    optimised: "O(1) lookups, checkpointed resume",
+    result: "crash and resume, same row",
     resultTone: "gain",
+    repo: "https://github.com/Nivish-21/Scraper",
   },
   {
     code: "P.06",
-    name: "Scraper — crash-resilient bulk image pull",
-    summary:
-      "Bulk image downloads across 100k–200k+ row datasets. Started as one script; five files later, each one exists because something broke — file-existence checks, redirect handling, candidate scoring.",
-    baseline: "O(n) checks, single image candidate, no resume",
-    optimised: "O(1) lookups, 12-candidate scoring, checkpointed resume",
-    result: "crash at row 47,000 resumes at row 47,000",
-    resultTone: "gain",
-  },
-  {
-    code: "P.07",
     name: "Stealth agent system — regulated procurement",
     summary:
-      "A stealth AI agent system for a regulated, overlooked market. Six specialised agents cover discovery, scoring, drafting, and compliance — with a self-correcting loop where one model drafts and another grades the work.",
+      "A stealth AI agent system for a regulated, overlooked market. Six specialised agents cover discovery, scoring, and drafting — with a self-correcting loop that grades its own work.",
     baseline: "manual discovery, manual drafting",
-    optimised: "6-agent pipeline, self-correcting draft/grade loop",
-    result: "working MVP, deployed",
+    optimised: "6-agent pipeline, self-grading loop",
+    result: "working MVP, deployed live",
     resultTone: "mark",
   },
 ];
 
-export interface LogEntry {
-  time: string;
-  kind: "train" | "ship";
-  text: string;
+export interface ExperienceEntry {
+  role: string;
+  org: string;
+  dates: string;
+  note?: string;
+  highlights: string[];
 }
 
-export const log: LogEntry[] = [
-  { time: "06:45", kind: "train", text: "8km tempo, held sub-4:30 pace" },
+export const experience: ExperienceEntry[] = [
   {
-    time: "14:20",
-    kind: "ship",
-    text: "shipped offline write-queue — cut sync failures on flaky networks",
+    role: "Founding CTO & Technical Lead",
+    org: "CaboCab — ride-hailing platform",
+    dates: "Jun 2024 — Present",
+    note: "part-time through final year of university, full-time from Jun 2025",
+    highlights: [
+      "Took CaboCab from zero to one — sole technical owner, from idea through architecture to a platform live in production today.",
+      "Built the in-app chat SDK and the real-time reliability layer: WhatsApp + Twilio alert escalation, offline-first write resilience.",
+      "Live in production, with reach extended into more districts through partnerships with other builders running it alongside mine.",
+    ],
   },
-  { time: "19:30", kind: "train", text: "leg day, then debugged map-matching drift" },
   {
-    time: "09:10",
-    kind: "ship",
-    text: "vulntriage v0.15.2 — fixed the undeclared-dependency crash",
-  },
-  { time: "06:20", kind: "train", text: "easy 6km recovery run" },
-  {
-    time: "21:00",
-    kind: "ship",
-    text: "ClaimBand: wired 3 frameworks into one shared context room",
+    role: "Founder",
+    org: "Stealth AI agent system — regulated, overlooked market",
+    dates: "2026 — Present",
+    highlights: [
+      "Six-agent architecture with a self-correcting draft/grade loop, running off a shared context layer.",
+      "Built solo, end to end, with an AI-native workflow (Claude Code, Cursor) — the same 0-to-1 speed as CaboCab, from day one.",
+      "Working MVP, deployed.",
+    ],
   },
 ];
 
 export const hud = {
   shipped: 8,
   liveCoverage: 6,
-  bestSector: "PyPI",
+  bestSector: "CaboCab",
   discipline: 2,
+};
+
+export type RoleVisualKind = "grid" | "lights" | "headset" | "wheel";
+
+export interface RoleCard {
+  title: string;
+  tag: string;
+  status: string;
+  color: "green" | "accent" | "purple" | "yellow";
+  readiness: number;
+  visual: RoleVisualKind;
+}
+
+export const openToRoles: RoleCard[] = [
+  {
+    title: "Backend Developer",
+    tag: "APIs + systems",
+    status: "ON GRID",
+    color: "green",
+    readiness: 90,
+    visual: "grid",
+  },
+  {
+    title: "Full-Stack Developer",
+    tag: "End-to-end builds",
+    status: "LIGHTS OUT",
+    color: "accent",
+    readiness: 95,
+    visual: "lights",
+  },
+  {
+    title: "Project Manager / Technical Lead",
+    tag: "Strategy + delivery",
+    status: "PIT WALL",
+    color: "purple",
+    readiness: 70,
+    visual: "headset",
+  },
+  {
+    title: "Founding Engineer",
+    tag: "0 → 1, fast",
+    status: "FORMATION LAP",
+    color: "yellow",
+    readiness: 95,
+    visual: "wheel",
+  },
+];
+
+export interface Education {
+  degree: string;
+  institution: string;
+  dates: string;
+  detail: string;
+}
+
+export const education: Education = {
+  degree: "B.E. Computer Science Engineering",
+  institution: "Loyola Institute of Technology and Science, Thovalai",
+  dates: "Jun 2021 — May 2025",
+  detail: "CGPA 8.18 / 10",
 };
 
 export const contact = {

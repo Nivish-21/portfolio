@@ -24,8 +24,8 @@ export function ContactForm() {
     if (!name.trim()) errors.name = "Call Sign required.";
     if (!email.trim()) {
       errors.email = "Return Channel required.";
-    } else if (!/\S+@\S+\.\S+/.test(email)) {
-      errors.email = "Invalid return channel channel path.";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errors.email = "Invalid return channel path.";
     }
     if (!message.trim()) errors.message = "Transmission content empty.";
 
@@ -77,7 +77,7 @@ export function ContactForm() {
 
   if (success) {
     return (
-      <div className="bg-bg border border-green p-6 rounded-sm text-left">
+      <div className="bg-bg border border-green p-6 rounded-sm text-left" role="status" aria-live="polite">
         <div className="flex items-center gap-2 text-green font-mono text-sm uppercase tracking-[0.14em] mb-3">
           <span className="h-2 w-2 rounded-full bg-green animate-pulse" />
           Transmission Synced
@@ -115,7 +115,11 @@ export function ContactForm() {
       </div>
 
       {error && (
-        <div className="bg-red/10 border border-red text-red p-3 text-xs font-mono uppercase tracking-[0.06em]">
+        <div
+          role="alert"
+          aria-live="assertive"
+          className="bg-red/10 border border-red text-red p-3 text-xs font-mono uppercase tracking-[0.06em]"
+        >
           Error: {error}
         </div>
       )}
@@ -136,7 +140,7 @@ export function ContactForm() {
             }
           }}
           disabled={submitting}
-          className={`w-full bg-panel border px-3.5 py-2 font-mono text-sm text-ink rounded-sm focus:outline-none transition-colors ${
+          className={`w-full bg-panel border px-3.5 py-2 font-mono text-sm text-ink rounded-sm focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 transition-colors ${
             validationErrors.name
               ? "border-red focus:border-red"
               : "border-line-strong focus:border-accent"
@@ -166,7 +170,7 @@ export function ContactForm() {
             }
           }}
           disabled={submitting}
-          className={`w-full bg-panel border px-3.5 py-2 font-mono text-sm text-ink rounded-sm focus:outline-none transition-colors ${
+          className={`w-full bg-panel border px-3.5 py-2 font-mono text-sm text-ink rounded-sm focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 transition-colors ${
             validationErrors.email
               ? "border-red focus:border-red"
               : "border-line-strong focus:border-accent"
@@ -196,7 +200,7 @@ export function ContactForm() {
             }
           }}
           disabled={submitting}
-          className={`w-full bg-panel border px-3.5 py-2.5 font-mono text-sm text-ink rounded-sm focus:outline-none transition-colors resize-none ${
+          className={`w-full bg-panel border px-3.5 py-2.5 font-mono text-sm text-ink rounded-sm focus:outline-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2 transition-colors resize-none ${
             validationErrors.message
               ? "border-red focus:border-red"
               : "border-line-strong focus:border-accent"
