@@ -70,7 +70,7 @@ export function useRaceEngineer() {
       addLine({ type: "output", text: "AVAILABLE COMMS DOWNLINKS:" });
       addLine({ type: "output", text: "  /status   - Personal-best lap telemetry." });
       addLine({ type: "output", text: "  /about    - Core parameters on founding CTO Nivish Vincent Raj." });
-      addLine({ type: "output", text: "  /projects - List delta project logs. Use '/projects [1-7]' for details." });
+      addLine({ type: "output", text: `  /projects - List delta project logs. Use '/projects [1-${projects.length}]' for details.` });
       addLine({ type: "output", text: "  /lights   - F1 reaction-time start lights protocol." });
       addLine({ type: "output", text: "  /clear    - Flush the terminal logs." });
       return;
@@ -108,7 +108,7 @@ export function useRaceEngineer() {
       } else {
         addLine({ type: "output", text: "  No lap recorded yet." });
       }
-      addLine({ type: "output", text: "  Toggle RACE MODE in the top bar, then drive START -> CP1 -> CP2 -> START to set one." });
+      addLine({ type: "output", text: "  Race Mode is paused for now — check back for a lap record soon." });
       return;
     }
 

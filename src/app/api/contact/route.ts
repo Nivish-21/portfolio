@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { Resend } from "resend";
 import { z } from "zod";
+import { contact } from "@/lib/content";
 
 const contactSchema = z.object({
   name: z.string().trim().min(1, "Call sign required.").max(100, "Call sign too long."),
@@ -57,9 +59,36 @@ export async function POST(request: Request) {
       );
     }
 
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      console.error("[Pit-to-car] RESEND_API_KEY not configured — transmission not delivered.");
+      return NextResponse.json(
+        { success: false, error: "Comms relay not configured. Email directly instead." },
+        { status: 503 }
+      );
+    }
+
+    const { name, email, message } = parsed.data;
+    const resend = new Resend(apiKey);
+    const { error: sendError } = await resend.emails.send({
+      from: "Portfolio <onboarding@resend.dev>",
+      to: contact.email,
+      replyTo: email,
+      subject: `Pit-to-car transmission from ${name}`,
+      text: `From: ${name} <${email}>\n\n${message}`,
+    });
+
+    if (sendError) {
+      console.error("[Pit-to-car] Resend send failed:", sendError.message);
+      return NextResponse.json(
+        { success: false, error: "Transmission failed to relay. Try emailing directly." },
+        { status: 502 }
+      );
+    }
+
     // Deliberately not logging name/email/message: these are the sender's
     // personal data and have no reason to sit in server logs.
-    console.log(`[Pit-to-car] transmission received at ${new Date().toISOString()}`);
+    console.log(`[Pit-to-car] transmission relayed at ${new Date().toISOString()}`);
 
     return NextResponse.json({
       success: true,
