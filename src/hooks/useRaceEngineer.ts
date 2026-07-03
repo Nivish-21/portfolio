@@ -1,7 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
-import { useRaceModeContext } from "@/context/RaceModeContext";
+import { useState, useCallback } from "react";
 import { projects, contact } from "@/lib/content";
 
 export interface TermLine {
@@ -10,19 +9,10 @@ export interface TermLine {
 }
 
 export function useRaceEngineer() {
-  const { personalBestMs } = useRaceModeContext();
   const [history, setHistory] = useState<TermLine[]>([
     { type: "system", text: "COMMS UPLINK ESTABLISHED OVER CHANNEL NVR-21." },
     { type: "system", text: "TYPE /help OR /commands FOR DIRECT DOWNLINK CODES." },
   ]);
-  const [, setLightsState] = useState<"idle" | "armed" | "go">("idle");
-  const lightsStateRef = useRef<"idle" | "armed" | "go">("idle");
-  const goTimeRef = useRef<number | null>(null);
-
-  const setLightsStateAndRef = (val: "idle" | "armed" | "go") => {
-    lightsStateRef.current = val;
-    setLightsState(val);
-  };
 
   const addLine = useCallback((line: TermLine) => {
     setHistory((prev) => [...prev, line]);
@@ -35,24 +25,6 @@ export function useRaceEngineer() {
   const runCommand = useCallback((input: string) => {
     const raw = input.trim();
     if (!raw) return;
-
-    // Intercept reaction triggers
-    if (lightsStateRef.current === "armed") {
-      setLightsStateAndRef("idle");
-      addLine({ type: "output", text: "❌ JUMP START — anticipated the lights. Try /lights again." });
-      return;
-    }
-    if (lightsStateRef.current === "go") {
-      const reactionMs = Math.round(performance.now() - (goTimeRef.current ?? performance.now()));
-      setLightsStateAndRef("idle");
-      addLine({
-        type: "output",
-        text: `🏁 REACTION: ${reactionMs}ms — ${
-          reactionMs < 200 ? "GENUINELY QUICK! Grid-ready." : reactionMs < 350 ? "Solid reaction time." : "A bit slow off the line."
-        }`
-      });
-      return;
-    }
 
     addLine({ type: "input", text: raw });
 
@@ -68,47 +40,26 @@ export function useRaceEngineer() {
 
     if (cmd === "/help" || cmd === "/commands") {
       addLine({ type: "output", text: "AVAILABLE COMMS DOWNLINKS:" });
-      addLine({ type: "output", text: "  /status   - Personal-best lap telemetry." });
+      addLine({ type: "output", text: "  /status   - Pit Arcade personal-best telemetry." });
       addLine({ type: "output", text: "  /about    - Core parameters on founding CTO Nivish Vincent Raj." });
       addLine({ type: "output", text: `  /projects - List delta project logs. Use '/projects [1-${projects.length}]' for details.` });
-      addLine({ type: "output", text: "  /lights   - F1 reaction-time start lights protocol." });
       addLine({ type: "output", text: "  /clear    - Flush the terminal logs." });
       return;
     }
 
-    if (cmd === "/lights") {
-      addLine({ type: "output", text: "🔴 LIGHTS OUT PROTOCOL ARMED. PRESS ENTER TO LAUNCH WHEN LIGHTS GO OUT." });
-      setLightsStateAndRef("armed");
-      
-      const holdMs = 1200 + Math.random() * 1800; // unpredictable hold
-      const sequence = [500, 500, 500, 500, holdMs];
-      let elapsed = 0;
-      
-      sequence.forEach((delay, i) => {
-        elapsed += delay;
-        setTimeout(() => {
-          if (lightsStateRef.current === "idle") return; // jump-started/aborted
-          
-          if (i < 4) {
-            addLine({ type: "output", text: "🔴 ".repeat(i + 1) });
-          } else {
-            goTimeRef.current = performance.now();
-            setLightsStateAndRef("go");
-            addLine({ type: "output", text: "⚪ ⚪ ⚪ ⚪ ⚪ — LIGHTS OUT! GO GO GO!" });
-          }
-        }, elapsed);
-      });
-      return;
-    }
-
     if (cmd === "/status") {
-      addLine({ type: "output", text: "🏎️ RACE TELEMETRY:" });
-      if (personalBestMs !== null) {
-        addLine({ type: "output", text: `  Personal best lap: ${(personalBestMs / 1000).toFixed(3)}s` });
-      } else {
-        addLine({ type: "output", text: "  No lap recorded yet." });
-      }
-      addLine({ type: "output", text: "  Race Mode is paused for now — check back for a lap record soon." });
+      addLine({ type: "output", text: "🏎️ PIT ARCADE TELEMETRY:" });
+      const raceBest = Number(localStorage.getItem("nvr-race-best"));
+      const loBest = Number(localStorage.getItem("nvr-lightsout-best"));
+      addLine({
+        type: "output",
+        text: `  Apex Rush track record: ${raceBest > 0 ? `${raceBest} m` : "not set"}`,
+      });
+      addLine({
+        type: "output",
+        text: `  Lights Out lap record: ${loBest > 0 ? `${loBest} ms` : "not set"}`,
+      });
+      addLine({ type: "output", text: "  Open the Pit Arcade (top nav) to set a time." });
       return;
     }
 
@@ -171,7 +122,7 @@ export function useRaceEngineer() {
     // Default unrecognized input
     addLine({ type: "output", text: "COPY THAT, DRIVER. SIGNAL IS FUZZY ON THIS CHANNEL." });
     addLine({ type: "output", text: "USE /commands FOR DIRECT TELEMETRY DOWNLINK REGISTRY." });
-  }, [personalBestMs, addLine, clearHistory]);
+  }, [addLine, clearHistory]);
 
   return { history, runCommand, clearHistory };
 }

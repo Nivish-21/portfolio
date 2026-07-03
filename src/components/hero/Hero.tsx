@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { RevLights } from "./RevLights";
 import { TelemetryTrace } from "./TelemetryTrace";
+import { useArcade } from "@/context/ArcadeContext";
 // import { Hud } from "./Hud";
 
 export function Hero() {
+  const { openArcade } = useArcade();
   const [animate, setAnimate] = useState(false);
 
   useEffect(() => {
@@ -63,6 +65,20 @@ export function Hero() {
         >
           {"// build first · optimise later"}
         </p>
+
+        <div
+          className={`mt-7 transition-[transform,opacity] duration-500 delay-[600ms] ${
+            animate ? "translate-y-0 opacity-100" : "translate-y-2.5 opacity-0"
+          }`}
+        >
+          <button
+            type="button"
+            onClick={openArcade}
+            className="cursor-pointer bg-accent px-6 py-2.5 font-display text-sm font-bold uppercase italic tracking-[0.08em] text-on-accent transition-colors hover:brightness-110"
+          >
+            ▸ Enter Pit Arcade
+          </button>
+        </div>
 
         {/* <div
           className={`transition-[transform,opacity] duration-500 delay-[550ms] ${

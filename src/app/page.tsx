@@ -7,15 +7,12 @@ import { Skills } from "@/components/sections/Skills";
 import { OpenToRoles } from "@/components/sections/OpenToRoles";
 import { Contact } from "@/components/sections/Contact";
 import { RaceEngineerConsole } from "@/components/sections/RaceEngineerConsole";
-import { RaceModeProvider } from "@/context/RaceModeContext";
-// Race Mode is paused for now — not implemented, not removed. RaceModeProvider stays active
-// below since useRaceEngineer.ts still reads personalBestMs from it (already null-guarded).
-// import { RaceCanvas } from "@/components/race/RaceCanvas";
-// import { LapResultToast } from "@/components/race/LapResultToast";
+import { ArcadeProvider } from "@/context/ArcadeContext";
+import { PitArcade } from "@/components/arcade/PitArcade";
 
 export default function Home() {
   return (
-    <RaceModeProvider>
+    <ArcadeProvider>
       <div className="flex flex-col flex-1 relative">
         <TopBar />
         <Hero />
@@ -27,10 +24,9 @@ export default function Home() {
           <Contact />
         </main>
         <Footer />
-        {/* <RaceCanvas /> */}
-        {/* <LapResultToast /> */}
         <RaceEngineerConsole />
+        <PitArcade />
       </div>
-    </RaceModeProvider>
+    </ArcadeProvider>
   );
 }
