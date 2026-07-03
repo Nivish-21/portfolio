@@ -38,7 +38,7 @@ export function FeaturedWork() {
       <div ref={revealRef} className="relative">
         <div
           ref={scrollerRef}
-          className="flex items-start gap-4 overflow-x-auto snap-x snap-mandatory scroll-px-6 pb-2"
+          className="scrollbar-none flex items-start gap-4 overflow-x-auto snap-x snap-mandatory scroll-px-6 pb-2"
         >
           {projects.map((project, idx) => (
             <div

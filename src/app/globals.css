@@ -110,6 +110,15 @@ select:focus-visible,
   transition: outline-color 0s;
 }
 
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
 @keyframes sector-ping {
   0% { transform: scaleY(1); }
   40% { transform: scaleY(1.8); }
