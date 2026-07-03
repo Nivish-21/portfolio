@@ -5,7 +5,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Nivish Vincent Raj — Ship first. Scale later.",
   description:
-    "Founding CTO building real-time systems, AI agents, and CLI tools — with the same marginal-gains discipline he brings to running and chess.",
+    "Founding CTO building real-time systems, AI agents, and CLI tools — shipped fast, refined relentlessly.",
 };
 
 export default function RootLayout({
