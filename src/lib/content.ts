@@ -91,7 +91,6 @@ export const experience: ExperienceEntry[] = [
     role: "Founding CTO & Technical Lead",
     org: "CaboCab — ride-hailing platform",
     dates: "Jun 2024 — Present",
-    note: "part-time through final year of university, full-time from Jun 2025",
     highlights: [
       "Took CaboCab from zero to one — sole technical owner, from idea through architecture to a platform live in production today.",
       "Built the in-app chat SDK and the real-time reliability layer: WhatsApp + Twilio alert escalation, offline-first write resilience.",
