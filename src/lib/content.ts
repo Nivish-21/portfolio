@@ -12,6 +12,9 @@ export interface Project {
   optimised: string;
   result: string;
   resultTone: "mark" | "gain" | "best";
+  /** Built for a hackathon — flagged on the card so it reads as a time-boxed
+   * build, not a production project. */
+  hackathon?: boolean;
   href?: string;
   repo?: string;
 }
@@ -30,38 +33,16 @@ export const projects: Project[] = [
   },
   {
     code: "P.02",
-    name: "ClaimBand — multi-agent claims adjudication",
+    name: "Stealth agent system — regulated procurement",
     summary:
-      "Built for the Band of Agents Hackathon in a week. Four agents, three frameworks, one shared context room for insurance claims — with a full audit trail.",
-    baseline: "single framework, no trust",
-    optimised: "shared room, structured hand-offs",
-    result: "approve, deny, escalate — traceable",
-    resultTone: "gain",
-    repo: "https://github.com/Nivish-21/Band-of-agents",
+      "A stealth AI agent system for a regulated, overlooked market. Six specialised agents cover discovery, scoring, and drafting — with a self-correcting loop that grades its own work.",
+    baseline: "manual discovery, manual drafting",
+    optimised: "6-agent pipeline, self-grading loop",
+    result: "working MVP, deployed live",
+    resultTone: "mark",
   },
   {
     code: "P.03",
-    name: "civichero — gamified civic triage",
-    summary:
-      "Built for the BlockseBlock hackathon. Citizens photograph a civic problem, Gemini Vision triages it in seconds, an agent plans the fix, and a community loop closes it.",
-    baseline: "manual reporting, no routing",
-    optimised: "Gemini triage, agentic resolution",
-    result: "XP, achievements, real engagement",
-    resultTone: "gain",
-    repo: "https://github.com/Nivish-21/civichero",
-  },
-  {
-    code: "P.04",
-    name: "QueueCutter — AI paperwork copilot",
-    summary:
-      "Government forms across the US, India, and the UK are confusing by design. QueueCutter turns them into a guided conversation and a ready-to-submit, rejection-scored PDF.",
-    baseline: "bureaucratic forms, high rejection",
-    optimised: "guided conversation, risk scoring",
-    result: "7 forms, 3 countries, live",
-    resultTone: "gain",
-  },
-  {
-    code: "P.05",
     name: "Scraper — crash-resilient bulk image pull",
     summary:
       "Bulk image downloads across 100k+ row datasets. Started as one script; five files later, each one exists because something broke in production last time.",
@@ -72,14 +53,28 @@ export const projects: Project[] = [
     repo: "https://github.com/Nivish-21/Scraper",
   },
   {
-    code: "P.06",
-    name: "Stealth agent system — regulated procurement",
+    code: "P.04",
+    name: "ClaimBand — multi-agent claims adjudication",
     summary:
-      "A stealth AI agent system for a regulated, overlooked market. Six specialised agents cover discovery, scoring, and drafting — with a self-correcting loop that grades its own work.",
-    baseline: "manual discovery, manual drafting",
-    optimised: "6-agent pipeline, self-grading loop",
-    result: "working MVP, deployed live",
-    resultTone: "mark",
+      "Built for the Band of Agents Hackathon in a week. Four agents, three frameworks, one shared context room for insurance claims — with a full audit trail.",
+    baseline: "single framework, no trust",
+    optimised: "shared room, structured hand-offs",
+    result: "approve, deny, escalate — traceable",
+    resultTone: "gain",
+    hackathon: true,
+    repo: "https://github.com/Nivish-21/Band-of-agents",
+  },
+  {
+    code: "P.05",
+    name: "civichero — gamified civic triage",
+    summary:
+      "Built for the BlockseBlock hackathon. Citizens photograph a civic problem, Gemini Vision triages it in seconds, an agent plans the fix, and a community loop closes it.",
+    baseline: "manual reporting, no routing",
+    optimised: "Gemini triage, agentic resolution",
+    result: "XP, achievements, real engagement",
+    resultTone: "gain",
+    hackathon: true,
+    repo: "https://github.com/Nivish-21/civichero",
   },
 ];
 
@@ -116,7 +111,7 @@ export const experience: ExperienceEntry[] = [
 ];
 
 export const hud = {
-  shipped: 8,
+  shipped: 5,
   liveCoverage: 6,
   bestSector: "CaboCab",
   discipline: 2,
