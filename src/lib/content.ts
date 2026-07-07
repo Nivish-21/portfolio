@@ -181,3 +181,53 @@ export const contact = {
   github: "https://github.com/Nivish-21",
   linkedin: "https://www.linkedin.com/in/nivish-vincent-raj/",
 };
+
+export interface Certification {
+  issuer: string;
+  name: string;
+  /** Display date, pre-formatted for the mono timing screen, e.g. "JUL 2026". */
+  issued: string;
+  /** FIA-style weight. Rarer credentials carry more; the set sums to the
+   * threshold, so the licence reads as "just eligible". */
+  points: number;
+  /** Issuer's own verification page (unwrapped from LinkedIn's redirect). */
+  url: string;
+  credentialId?: string;
+}
+
+/** Points needed to be cleared to race — the real FIA Super Licence threshold. */
+export const SUPERLICENCE_THRESHOLD = 40;
+
+export const certifications: Certification[] = [
+  {
+    issuer: "Palantir",
+    name: "Winter Tech Fellowship",
+    issued: "JUL 2026",
+    points: 18,
+    url: "https://verify.skilljar.com/c/8pz5mykb5cee",
+    credentialId: "8pz5mykb5cee",
+  },
+  {
+    issuer: "Oracle",
+    name: "OCI 2025 Certified AI Foundations Associate",
+    issued: "OCT 2025",
+    points: 12,
+    url: "https://catalog-education.oracle.com/pls/certview/sharebadge?id=3C4285627E1E0D476E66D051F3664A4CD5389499E718B6873EB16B6B21B3C455",
+  },
+  {
+    issuer: "Anthropic",
+    name: "AI Fluency: Framework & Foundations",
+    issued: "JUN 2026",
+    points: 6,
+    url: "https://verify.skilljar.com/c/2fwxu4p7ikpi",
+    credentialId: "2fwxu4p7ikpi",
+  },
+  {
+    issuer: "Anthropic",
+    name: "Claude 101",
+    issued: "JUN 2026",
+    points: 4,
+    url: "https://verify.skilljar.com/c/znwonurjd2nk",
+    credentialId: "znwonurjd2nk",
+  },
+];

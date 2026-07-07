@@ -5,7 +5,10 @@ import { openToRoles } from "@/lib/content";
 import type { RoleCard } from "@/lib/content";
 import { useRevealOnScroll } from "@/hooks/useRevealOnScroll";
 
-const COLOR_CLASSES: Record<RoleCard["color"], { border: string; text: string; bg: string }> = {
+const COLOR_CLASSES: Record<
+  RoleCard["color"],
+  { border: string; text: string; bg: string }
+> = {
   green: { border: "border-t-green", text: "text-green", bg: "bg-green" },
   accent: { border: "border-t-accent", text: "text-accent", bg: "bg-accent" },
   purple: { border: "border-t-purple", text: "text-purple", bg: "bg-purple" },
@@ -18,11 +21,14 @@ export function OpenToRoles() {
   return (
     <Section
       id="roles"
-      sectorLabel="S4"
+      sectorLabel="S5"
       title="Open to Roles"
       meta="currently seeking full-time"
     >
-      <div ref={ref} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div
+        ref={ref}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      >
         {openToRoles.map((role) => {
           const c = COLOR_CLASSES[role.color];
           return (
@@ -30,7 +36,9 @@ export function OpenToRoles() {
               key={role.title}
               className={`relative flex flex-col gap-3 bg-panel border border-line-strong border-t-[3px] ${c.border} p-5`}
             >
-              <span className={`self-start font-mono text-[10px] font-bold uppercase tracking-[0.1em] ${c.text}`}>
+              <span
+                className={`self-start font-mono text-[10px] font-bold uppercase tracking-[0.1em] ${c.text}`}
+              >
                 {role.status}
               </span>
               <h3 className="font-display font-bold uppercase text-base tracking-[0.02em]">
@@ -44,7 +52,8 @@ export function OpenToRoles() {
                   className={`block h-full rounded-sm ${c.bg} transition-[width] duration-700`}
                   style={{
                     width: revealed ? `${role.readiness}%` : "0%",
-                    transitionTimingFunction: "cubic-bezier(0.34, 1.56, 0.64, 1)",
+                    transitionTimingFunction:
+                      "cubic-bezier(0.34, 1.56, 0.64, 1)",
                   }}
                 />
               </div>

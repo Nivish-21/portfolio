@@ -4,6 +4,7 @@ import { Hero } from "@/components/hero/Hero";
 import { Experience } from "@/components/sections/Experience";
 import { FeaturedWork } from "@/components/sections/FeaturedWork";
 import { Skills } from "@/components/sections/Skills";
+import { Superlicence } from "@/components/sections/Superlicence";
 import { OpenToRoles } from "@/components/sections/OpenToRoles";
 import { Contact } from "@/components/sections/Contact";
 import { RaceEngineerConsole } from "@/components/sections/RaceEngineerConsole";
@@ -20,6 +21,7 @@ export default function Home() {
           <Experience />
           <FeaturedWork />
           <Skills />
+          <Superlicence />
           <OpenToRoles />
           <Contact />
         </main>

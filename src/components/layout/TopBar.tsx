@@ -6,6 +6,7 @@ const NAV_LINKS = [
   { href: "#experience", label: "Experience" },
   { href: "#work", label: "Work" },
   { href: "#skills", label: "Skills" },
+  { href: "#superlicence", label: "Licence" },
   { href: "#roles", label: "Roles" },
   { href: "#contact", label: "Radio" },
 ];
@@ -23,7 +24,10 @@ export function TopBar() {
           Ship first &middot; Scale later
         </span>
 
-        <nav aria-label="Main navigation" className="ml-auto flex items-center gap-5">
+        <nav
+          aria-label="Main navigation"
+          className="ml-auto flex items-center gap-5"
+        >
           {NAV_LINKS.map((link) => (
             <a
               key={link.href}
