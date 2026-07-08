@@ -19,6 +19,9 @@
   --color-yellow: #f2c230;
   --color-red: #ea5a44;
 
+  /* F1 shift-light "change up" blue-violet (rev-lights redline zone) */
+  --color-shift: #3d5afe;
+
   --space-section: clamp(4rem, 3rem + 5vw, 8rem);
   --content-max: 68rem;
 
@@ -43,6 +46,7 @@
   --color-green: var(--color-green);
   --color-yellow: var(--color-yellow);
   --color-red: var(--color-red);
+  --color-shift: var(--color-shift);
 
   --font-display: var(--font-display);
   --font-body: var(--font-body);
@@ -120,7 +124,13 @@ select:focus-visible,
 }
 
 @keyframes sector-ping {
-  0% { transform: scaleY(1); }
-  40% { transform: scaleY(1.8); }
-  100% { transform: scaleY(1); }
+  0% {
+    transform: scaleY(1);
+  }
+  40% {
+    transform: scaleY(1.8);
+  }
+  100% {
+    transform: scaleY(1);
+  }
 }
