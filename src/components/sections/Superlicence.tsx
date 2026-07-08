@@ -14,6 +14,41 @@ const TOTAL = certifications.reduce((sum, c) => sum + c.points, 0);
 const MAX_POINTS = Math.max(...certifications.map((c) => c.points));
 const EASE_OUT_BACK = "cubic-bezier(0.34, 1.56, 0.64, 1)";
 
+/** Official monochrome brand marks (Simple Icons), keyed by issuer. Inlined so
+ * the logos ship with the bundle and inherit the row colour via currentColor. */
+const ISSUER_LOGOS: Record<string, string> = {
+  Anthropic:
+    "M17.3041 3.541h-3.6718l6.696 16.918H24Zm-10.6082 0L0 20.459h3.7442l1.3693-3.5527h7.0052l1.3693 3.5528h3.7442L10.5363 3.5409Zm-.3712 10.2232 2.2914-5.9456 2.2914 5.9456Z",
+  Oracle:
+    "M16.412 4.412h-8.82a7.588 7.588 0 0 0-.008 15.176h8.828a7.588 7.588 0 0 0 0-15.176zm-.193 12.502H7.786a4.915 4.915 0 0 1 0-9.828h8.433a4.914 4.914 0 1 1 0 9.828z",
+  Palantir:
+    "M20.147 18L12 21.178 3.853 18 2.5 20.343 12 24l9.5-3.657L20.147 18zM12 0a9.5 9.5 0 1 0 0 19 9.5 9.5 0 0 0 0-19zm0 16.078a6.568 6.568 0 1 1 0-13.136 6.568 6.568 0 0 1 0 13.136z",
+};
+
+/** Issuer lockup for the timing column — brand mark paired with the wordmark.
+ * Falls back to the name alone when no logo is registered. */
+function IssuerLogo({ issuer }: { issuer: string }) {
+  const path = ISSUER_LOGOS[issuer];
+  return (
+    <span className="flex w-[128px] shrink-0 items-center gap-2">
+      {path && (
+        <svg
+          viewBox="0 0 24 24"
+          role="img"
+          aria-hidden="true"
+          fill="currentColor"
+          className="h-4 w-4 shrink-0 text-muted"
+        >
+          <path d={path} />
+        </svg>
+      )}
+      <span className="truncate font-mono text-[10px] uppercase tracking-[0.1em] text-muted">
+        {issuer}
+      </span>
+    </span>
+  );
+}
+
 /** Colour a row by weight so the rare credentials read louder than the free ones. */
 function grade(points: number): { text: string; bar: string } {
   if (points >= 15) return { text: "text-green", bar: "bg-green" };
@@ -142,41 +177,45 @@ function CertRow({
       }`}
       style={{ transitionDelay: revealed ? `${delay}ms` : "0ms" }}
     >
-      <div className="flex items-baseline gap-3">
-        <span className="w-[68px] shrink-0 font-mono text-[10px] uppercase tracking-[0.1em] text-muted">
-          {cert.issuer}
-        </span>
-        <span className="flex-1 text-sm font-medium leading-snug text-ink">
-          {cert.name}
-        </span>
-        <span
-          className={`shrink-0 font-mono text-sm font-bold tabular-nums ${g.text}`}
-        >
-          +{cert.points}
-        </span>
-      </div>
-      <div className="mt-2 flex items-center gap-3 pl-[68px] max-sm:pl-0">
-        <span className="w-[64px] shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-2">
-          {cert.issued}
-        </span>
-        <div className="relative h-1.5 flex-1 overflow-hidden rounded-[1px] bg-ink/10">
-          <span
-            className={`absolute inset-y-0 left-0 rounded-[1px] transition-[width] duration-700 ${g.bar}`}
-            style={{
-              width: revealed ? `${(cert.points / MAX_POINTS) * 100}%` : "0%",
-              transitionDelay: revealed ? `${delay + 120}ms` : "0ms",
-              transitionTimingFunction: EASE_OUT_BACK,
-            }}
-          />
+      <div className="flex items-center gap-3">
+        <IssuerLogo issuer={cert.issuer} />
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center gap-3">
+            <span className="flex-1 text-sm font-medium leading-snug text-ink">
+              {cert.name}
+            </span>
+            <span
+              className={`shrink-0 font-mono text-sm font-bold tabular-nums ${g.text}`}
+            >
+              +{cert.points}
+            </span>
+          </div>
+          <div className="mt-2 flex items-center gap-3">
+            <span className="w-[64px] shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-muted-2">
+              {cert.issued}
+            </span>
+            <div className="relative h-1.5 flex-1 overflow-hidden rounded-[1px] bg-ink/10">
+              <span
+                className={`absolute inset-y-0 left-0 rounded-[1px] transition-[width] duration-700 ${g.bar}`}
+                style={{
+                  width: revealed
+                    ? `${(cert.points / MAX_POINTS) * 100}%`
+                    : "0%",
+                  transitionDelay: revealed ? `${delay + 120}ms` : "0ms",
+                  transitionTimingFunction: EASE_OUT_BACK,
+                }}
+              />
+            </div>
+            <a
+              href={cert.url}
+              target="_blank"
+              rel="noreferrer"
+              className="shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-muted transition-colors hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+            >
+              Verify →
+            </a>
+          </div>
         </div>
-        <a
-          href={cert.url}
-          target="_blank"
-          rel="noreferrer"
-          className="shrink-0 font-mono text-[10px] uppercase tracking-[0.08em] text-muted transition-colors hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-        >
-          Verify →
-        </a>
       </div>
     </li>
   );
