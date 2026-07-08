@@ -72,6 +72,27 @@ html {
   scroll-margin-top: 4.5rem;
 }
 
+@keyframes race-fade {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.race-fade {
+  animation: race-fade 0.35s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .race-fade {
+    animation: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;

@@ -67,7 +67,10 @@ export function ContactForm() {
         throw new Error(data.error || "Telemetry transmission failed.");
       }
     } catch (err: unknown) {
-      const errMsg = err instanceof Error ? err.message : "Uplink failure. Please check connection.";
+      const errMsg =
+        err instanceof Error
+          ? err.message
+          : "Uplink failure. Please check connection.";
       setError(errMsg);
     } finally {
       setSubmitting(false);
@@ -77,13 +80,28 @@ export function ContactForm() {
 
   if (success) {
     return (
-      <div className="bg-bg border border-green p-6 rounded-sm text-left" role="status" aria-live="polite">
+      <div
+        className="bg-bg border border-green p-6 rounded-sm text-left"
+        role="status"
+        aria-live="polite"
+      >
         <div className="flex items-center gap-2 text-green font-mono text-sm uppercase tracking-[0.14em] mb-3">
           <span className="h-2 w-2 rounded-full bg-green animate-pulse" />
           Transmission Synced
+          <span className="ml-auto flex items-center gap-1.5 text-[9px] tracking-[0.12em] text-muted normal-case">
+            <span
+              className="h-2.5 w-2.5 rounded-[1px]"
+              style={{
+                background:
+                  "repeating-conic-gradient(#fff 0 25%, #0a0f0e 0 50%) 0 0 / 5px 5px",
+              }}
+            />
+            Chequered · delivered
+          </span>
         </div>
         <p className="text-sm text-ink mb-4 font-mono">
-          Uplink completed successfully. The telemetry log has been stored at the pit wall.
+          Uplink completed successfully. The telemetry log has been stored at
+          the pit wall.
         </p>
         <div className="bg-panel border border-line-strong p-4 font-mono text-xs text-muted mb-5">
           <div className="flex justify-between border-b border-line-strong/40 pb-2 mb-2">
@@ -105,13 +123,45 @@ export function ContactForm() {
     );
   }
 
+  // Race-flag reflecting the transmission state — reuses the existing state
+  // machine, no new logic. Only fires on real feedback (fault / in-progress).
+  const flagState = error
+    ? {
+        dot: "bg-red",
+        text: "text-red",
+        glow: "var(--color-red)",
+        label: "Red · fault",
+      }
+    : submitting
+      ? {
+          dot: "bg-yellow",
+          text: "text-yellow",
+          glow: "var(--color-yellow)",
+          label: "Yellow · tx",
+        }
+      : {
+          dot: "bg-green",
+          text: "text-green",
+          glow: "var(--color-green)",
+          label: "Green · ready",
+        };
+
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4.5 text-left bg-bg border border-line-strong p-5 md:p-6">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col gap-4.5 text-left bg-bg border border-line-strong p-5 md:p-6"
+    >
       <div className="border-b border-line-strong pb-3 mb-2 flex justify-between items-center">
         <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-muted">
           Radio Panel // COMMS CONTROL
         </span>
-        <span className="h-1.5 w-1.5 rounded-full bg-accent" />
+        <span className="flex items-center gap-1.5 font-mono text-[9px] tracking-[0.12em] uppercase">
+          <span
+            className={`h-1.5 w-1.5 rounded-full ${flagState.dot}`}
+            style={{ boxShadow: `0 0 6px ${flagState.glow}` }}
+          />
+          <span className={flagState.text}>{flagState.label}</span>
+        </span>
       </div>
 
       {error && (
@@ -126,7 +176,10 @@ export function ContactForm() {
 
       {/* Name / Call Sign */}
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="name" className="font-mono text-[10px] tracking-[0.14em] uppercase text-muted">
+        <label
+          htmlFor="name"
+          className="font-mono text-[10px] tracking-[0.14em] uppercase text-muted"
+        >
           Call Sign (Name)
         </label>
         <input
@@ -156,7 +209,10 @@ export function ContactForm() {
 
       {/* Email / Return Channel */}
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="email" className="font-mono text-[10px] tracking-[0.14em] uppercase text-muted">
+        <label
+          htmlFor="email"
+          className="font-mono text-[10px] tracking-[0.14em] uppercase text-muted"
+        >
           Return Channel (Email)
         </label>
         <input
@@ -186,7 +242,10 @@ export function ContactForm() {
 
       {/* Message / Transmission */}
       <div className="flex flex-col gap-1.5">
-        <label htmlFor="message" className="font-mono text-[10px] tracking-[0.14em] uppercase text-muted">
+        <label
+          htmlFor="message"
+          className="font-mono text-[10px] tracking-[0.14em] uppercase text-muted"
+        >
           Transmission Content (Message)
         </label>
         <textarea
@@ -218,11 +277,15 @@ export function ContactForm() {
       <button
         type="submit"
         disabled={submitting}
-        className="w-full mt-3 py-2.5 bg-line-strong hover:bg-accent hover:text-on-accent text-xs font-mono tracking-[0.12em] uppercase rounded-sm transition-colors cursor-pointer flex items-center justify-center gap-2"
+        className={`w-full mt-3 py-2.5 text-xs font-mono tracking-[0.12em] uppercase rounded-sm transition-colors cursor-pointer flex items-center justify-center gap-2 ${
+          submitting
+            ? "bg-yellow/15 text-yellow border border-yellow/50"
+            : "bg-line-strong hover:bg-accent hover:text-on-accent"
+        }`}
       >
         {submitting ? (
           <>
-            <span className="h-1.5 w-1.5 rounded-full bg-on-accent animate-ping" />
+            <span className="h-1.5 w-1.5 rounded-full bg-yellow animate-ping" />
             {progressMsg}
           </>
         ) : (

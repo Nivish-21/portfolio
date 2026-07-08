@@ -231,3 +231,20 @@ export const certifications: Certification[] = [
     credentialId: "znwonurjd2nk",
   },
 ];
+
+export type RaceFlag = "green" | "yellow" | "red" | "blue" | "chequered";
+
+export interface RaceControlMessage {
+  flag: RaceFlag;
+  text: string;
+}
+
+/** Compact Race Control signals — true status, short enough for the nav status
+ * pill. Rotates beside the NVR badge. */
+export const raceControlMessages: RaceControlMessage[] = [
+  { flag: "green", text: "Open to work" },
+  { flag: "green", text: "Radio open" },
+  { flag: "blue", text: "5 shipped · live" },
+  { flag: "yellow", text: "Remote-ready" },
+  { flag: "chequered", text: "Cleared to race" },
+];
