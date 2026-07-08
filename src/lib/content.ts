@@ -89,22 +89,27 @@ export interface ExperienceEntry {
 export const experience: ExperienceEntry[] = [
   {
     role: "Founding CTO & Technical Lead",
-    org: "CaboCab — ride-hailing platform",
-    dates: "Jun 2024 — Present",
+    org: "CaboCab, a ride hailing platform",
+    dates: "Jun 2024 → Present",
     highlights: [
-      "Took CaboCab from zero to one — sole technical owner, from idea through architecture to a platform live in production today.",
-      "Built the in-app chat SDK and the real-time reliability layer: WhatsApp + Twilio alert escalation, offline-first write resilience.",
-      "Live in production, with reach extended into more districts through partnerships with other builders running it alongside mine.",
+      "Took CaboCab from zero to one as the sole technical owner, from idea through architecture to a platform live in production today.",
+      "Built the app's chat SDK from start to finish, using idempotency keys so message delivery never duplicates.",
+      "Inherited an escalation watcher that was only partly built and completed it, adding tiered alerts across WhatsApp, email, and Twilio.",
+      "Built a driver feedback pipeline using WhatsApp for reporting and S3 for image uploads.",
+      "Designed the logic behind the system that keeps fare distance accurate, combining GPS filtering with routing that matches the road network through OSRM.",
+      "Designed a location sync built to work offline first and stay resilient to real network outages, including the September 2025 Red Sea cable cuts.",
+      "Diagnosed and resolved a major Google Maps API cost anomaly through Cloud billing analysis.",
+      "Live in production today, with reach extended into more districts through partnerships with other builders running it alongside mine.",
     ],
   },
   {
     role: "Founder",
-    org: "Stealth AI agent system — regulated, overlooked market",
-    dates: "2026 — Present",
+    org: "Stealth AI agent system for a regulated, overlooked market",
+    dates: "Jun 2026 → Present",
     highlights: [
-      "Six-agent architecture with a self-correcting draft/grade loop, running off a shared context layer.",
-      "Built solo, end to end, with an AI-native workflow (Claude Code, Cursor) — the same 0-to-1 speed as CaboCab, from day one.",
-      "Working MVP, deployed.",
+      "An architecture of six agents with a draft and grade loop that corrects itself, running off a shared context layer.",
+      "Built solo from start to finish, with an AI native workflow (Claude Code, Cursor), matching the same zero to one speed as CaboCab from day one.",
+      "Live and in active use, now being rearchitected toward a genuinely agentic core.",
     ],
   },
 ];
@@ -208,13 +213,6 @@ export const certifications: Certification[] = [
     credentialId: "8pz5mykb5cee",
   },
   {
-    issuer: "Oracle",
-    name: "OCI 2025 Certified AI Foundations Associate",
-    issued: "OCT 2025",
-    points: 12,
-    url: "https://catalog-education.oracle.com/pls/certview/sharebadge?id=3C4285627E1E0D476E66D051F3664A4CD5389499E718B6873EB16B6B21B3C455",
-  },
-  {
     issuer: "Anthropic",
     name: "AI Fluency: Framework & Foundations",
     issued: "JUN 2026",
@@ -229,6 +227,13 @@ export const certifications: Certification[] = [
     points: 4,
     url: "https://verify.skilljar.com/c/znwonurjd2nk",
     credentialId: "znwonurjd2nk",
+  },
+  {
+    issuer: "Oracle",
+    name: "OCI 2025 Certified AI Foundations Associate",
+    issued: "OCT 2025",
+    points: 12,
+    url: "https://catalog-education.oracle.com/pls/certview/sharebadge?id=3C4285627E1E0D476E66D051F3664A4CD5389499E718B6873EB16B6B21B3C455",
   },
 ];
 
