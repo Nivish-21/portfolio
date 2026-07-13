@@ -2,10 +2,32 @@ import type { Metadata } from "next";
 import { anton, barlowCondensed, courierPrime } from "@/lib/fonts";
 import "./globals.css";
 
+const TITLE = "Nivish Vincent Raj — Every bug is a suspect.";
+const DESCRIPTION =
+  "Founding CTO. Two companies from zero to one. Every project here is a case: the crime, the suspects I ruled out, and the culprit that survived.";
+
 export const metadata: Metadata = {
-  title: "Nivish Vincent Raj — Every bug is a suspect.",
-  description:
-    "Founding CTO. Two companies from zero to one. Real-time systems, AI agents, and CLI tools, shipped raw and then proved.",
+  metadataBase: new URL("https://nivish.vercel.app"),
+  title: TITLE,
+  description: DESCRIPTION,
+  // Without these the link previews as a blank card wherever it is shared, which
+  // is most of the places a portfolio actually gets passed around.
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: "https://nivish.vercel.app",
+    siteName: "Nivish Vincent Raj",
+    type: "website",
+    locale: "en_GB",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+  },
+  authors: [
+    { name: "Nivish Vincent Raj", url: "https://github.com/Nivish-21" },
+  ],
 };
 
 /**

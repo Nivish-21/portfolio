@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="A sealed case file">
+  <!-- The wax seal: the site's signature. Four of the eight cases carry one,
+       and it is the one mark that reads at 16px. -->
+  <defs>
+    <radialGradient id="lamp" cx="26%" cy="10%" r="90%">
+      <stop offset="0" stop-color="#3a3128" />
+      <stop offset="1" stop-color="#0e0d0c" />
+    </radialGradient>
+    <radialGradient id="wax" cx="36%" cy="30%" r="75%">
+      <stop offset="0" stop-color="#e0505b" />
+      <stop offset="0.55" stop-color="#c4212f" />
+      <stop offset="1" stop-color="#8d1621" />
+    </radialGradient>
+  </defs>
+
+  <rect width="32" height="32" fill="url(#lamp)" />
+
+  <!-- the red thread, running under the seal -->
+  <path d="M0 24 L12 17 L20 21 L32 12" stroke="#c4212f" stroke-opacity="0.5" stroke-width="1.1" fill="none" />
+
+  <!-- the seal itself, pressed and slightly irregular -->
+  <circle cx="16" cy="16" r="9" fill="url(#wax)" />
+  <circle cx="16" cy="16" r="6.6" fill="none" stroke="#0e0d0c" stroke-opacity="0.42" stroke-width="1" />
+
+  <!-- NVR, struck into the wax. Sized to sit inside the inner ring, not burst it. -->
+  <text
+    x="16" y="18.9"
+    font-family="Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif"
+    font-size="6.8"
+    text-anchor="middle"
+    fill="#0e0d0c"
+    fill-opacity="0.82"
+    letter-spacing="-0.2"
+  >NVR</text>
+</svg>
