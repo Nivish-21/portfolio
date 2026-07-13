@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { anton, barlowCondensed, courierPrime } from "@/lib/fonts";
 import "./globals.css";
 
@@ -53,6 +54,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col bg-void text-file">
         {children}
+        <Analytics />
       </body>
     </html>
   );
