@@ -331,12 +331,13 @@ export interface Pin {
 }
 
 export const evidenceBoard: Pin[] = [
-  { tool: "Python", usedOn: "Cases 02, 04", primary: true },
-  { tool: "JavaScript", usedOn: "Cases 01, 05", primary: true },
-  { tool: "TypeScript", usedOn: "Cases 03, 05", primary: true },
+  { tool: "Python", usedOn: "Cases 02, 04, 05", primary: true },
+  { tool: "JavaScript", usedOn: "Case 01", primary: true },
+  { tool: "TypeScript", usedOn: "Case 03", primary: true },
   { tool: "Claude Code", usedOn: "Every case since 2026", primary: true },
-  { tool: "Node", usedOn: "Case 05 · the chat SDK", primary: true },
+  { tool: "Node", usedOn: "Cases 09, 10", primary: true },
   { tool: "Postgres", usedOn: "Cases 01, 05, 09", primary: true },
+  { tool: "FastAPI", usedOn: "Case 05 · the chat SDK" },
   { tool: "OSRM", usedOn: "Case 01 · the fare that lied" },
   { tool: "Twilio", usedOn: "The escalation alerts" },
   { tool: "AWS S3", usedOn: "Driver feedback uploads" },
