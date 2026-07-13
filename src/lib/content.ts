@@ -344,9 +344,9 @@ export const evidenceBoard: Pin[] = [
   { tool: "React", usedOn: "Cases 08, 09" },
   { tool: "OpenAI API", usedOn: "Case 09 · QueueCutter" },
   { tool: "Convex", usedOn: "Case 10 · Switchboard" },
-  { tool: "Docker", usedOn: "Shipping all of it" },
+  { tool: "Docker", usedOn: "Case 01 · self-hosting OSRM" },
   { tool: "Cursor", usedOn: "In the daily loop" },
-  { tool: "PHP / Laravel", usedOn: "Where I started" },
+  { tool: "PHP / Laravel", usedOn: "One small project, briefly" },
 ];
 
 export interface Credential {
