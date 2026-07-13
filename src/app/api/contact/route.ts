@@ -7,14 +7,14 @@ const contactSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(1, "Call sign required.")
-    .max(100, "Call sign too long."),
-  email: z.string().trim().email("Invalid return channel path.").max(255),
+    .min(1, "I need to know who is asking.")
+    .max(100, "That name is too long."),
+  email: z.string().trim().email("That address will not reach you.").max(255),
   message: z
     .string()
     .trim()
-    .min(1, "Transmission content empty.")
-    .max(5000, "Transmission too long."),
+    .min(1, "Tell me what happened.")
+    .max(5000, "That statement is too long."),
 });
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     return NextResponse.json(
       {
         success: false,
-        error: "Too many transmissions. Wait before retrying.",
+        error: "You have filed several already. Give it a minute.",
       },
       { status: 429 },
     );
@@ -68,7 +68,9 @@ export async function POST(request: Request) {
       return NextResponse.json(
         {
           success: false,
-          error: parsed.error.issues[0]?.message ?? "Invalid transmission.",
+          error:
+            parsed.error.issues[0]?.message ??
+            "That statement is not complete.",
         },
         { status: 400 },
       );
@@ -77,12 +79,13 @@ export async function POST(request: Request) {
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
       console.error(
-        "[Pit-to-car] RESEND_API_KEY not configured — transmission not delivered.",
+        "[intake] RESEND_API_KEY not configured — the statement was not delivered.",
       );
       return NextResponse.json(
         {
           success: false,
-          error: "Comms relay not configured. Email directly instead.",
+          error:
+            "The intake desk is not wired up yet. Email me directly instead.",
         },
         { status: 503 },
       );
@@ -94,16 +97,16 @@ export async function POST(request: Request) {
       from: "Portfolio <onboarding@resend.dev>",
       to: contact.email,
       replyTo: email,
-      subject: `Pit-to-car transmission from ${name}`,
+      subject: `New case filed by ${name}`,
       text: `From: ${name} <${email}>\n\n${message}`,
     });
 
     if (sendError) {
-      console.error("[Pit-to-car] Resend send failed:", sendError.message);
+      console.error("[intake] Resend send failed:", sendError.message);
       return NextResponse.json(
         {
           success: false,
-          error: "Transmission failed to relay. Try emailing directly.",
+          error: "The statement did not go through. Try emailing me directly.",
         },
         { status: 502 },
       );
@@ -111,19 +114,21 @@ export async function POST(request: Request) {
 
     // Deliberately not logging name/email/message: these are the sender's
     // personal data and have no reason to sit in server logs.
-    console.log(
-      `[Pit-to-car] transmission relayed at ${new Date().toISOString()}`,
-    );
+    console.log(`[intake] statement delivered at ${new Date().toISOString()}`);
 
     return NextResponse.json({
       success: true,
       timestamp: new Date().toISOString(),
-      transmissionId: `TX-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
+      // The reference the filer gets back, the way a real intake desk issues one.
+      reference: `CASE-${Math.random().toString(36).substring(2, 8).toUpperCase()}`,
     });
   } catch (error) {
-    console.error("Error handling telemetry transmission:", error);
+    console.error("[intake] failed to handle the statement:", error);
     return NextResponse.json(
-      { success: false, error: "Internal Telemetry Error" },
+      {
+        success: false,
+        error: "Something broke on my side. Email me directly.",
+      },
       { status: 500 },
     );
   }

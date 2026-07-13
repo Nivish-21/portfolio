@@ -22,7 +22,10 @@ const STYLE: Record<SfxKind, string> = {
   // Runs DOWN the edge of the cover, the way rain is lettered into a panel
   // border. Vertical writing-mode, not a rotate: a rotate keeps the layout box
   // horizontal and throws the glyphs off the canvas.
-  rain: "absolute right-[2%] top-10 hidden text-[clamp(1.4rem,2.6vw,2.25rem)] tracking-[0.3em] text-transparent [-webkit-text-stroke:1.2px_rgba(228,223,210,0.28)] [writing-mode:vertical-rl] sm:block",
+  // `text-orientation: upright` keeps each letter the right way up as the word
+  // runs down the page. Without it the glyphs rotate onto their sides and read
+  // as debris rather than lettering.
+  rain: "absolute right-[2.5%] top-10 hidden text-[clamp(1.1rem,2vw,1.6rem)] leading-none tracking-[0.32em] text-transparent [-webkit-text-stroke:1.1px_rgba(228,223,210,0.26)] [text-orientation:upright] [writing-mode:vertical-rl] lg:block",
   // Footsteps approaching the file you are about to open.
   step: "absolute bottom-2.5 right-4 text-2xl text-transparent [-webkit-text-stroke:1.5px_rgba(232,180,92,0.75)] opacity-0 translate-x-3 transition-[opacity,transform] duration-500 ease-[var(--ease-out-expo)] group-hover:opacity-100 group-hover:translate-x-0 group-open:!opacity-0",
   // The reveal. Slams in once, when the case is opened.
