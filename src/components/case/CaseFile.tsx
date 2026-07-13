@@ -83,7 +83,7 @@ export function CaseFile({ file }: { file: Case }) {
           <span className="flex flex-wrap items-center gap-2.5">
             {file.timeBoxed ? (
               <span className="border border-thread-text/50 px-2.5 py-1 font-mono text-[11px] font-normal tracking-[0.18em] text-thread-text">
-                Closed in 7 days
+                Closed in {file.timeBoxed}
               </span>
             ) : null}
             <span

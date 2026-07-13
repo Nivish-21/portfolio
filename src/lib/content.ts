@@ -33,8 +33,8 @@ export interface Case {
   culprit: string;
   fix: string;
   evidence: Evidence;
-  /** Built inside a hackathon week. Marked, so it never reads as production work. */
-  timeBoxed?: boolean;
+  /** How long the build actually took, so it never reads as production work. */
+  timeBoxed?: string;
 }
 
 export const cases: Case[] = [
@@ -199,7 +199,7 @@ export const cases: Case[] = [
       href: "https://github.com/Nivish-21/Band-of-agents",
       label: "Read the evidence",
     },
-    timeBoxed: true,
+    timeBoxed: "7 days",
   },
   {
     no: "08",
@@ -220,7 +220,59 @@ export const cases: Case[] = [
       href: "https://github.com/Nivish-21/civichero",
       label: "Read the evidence",
     },
-    timeBoxed: true,
+    timeBoxed: "7 days",
+  },
+  {
+    no: "09",
+    title: "The Form Nobody Finished",
+    meta: "QueueCutter · US/India/UK",
+    crime:
+      "Government paperwork was going unread halfway through. The words were plain English. Nobody could tell what the form was actually asking for, or what would get it rejected.",
+    suspects: [
+      {
+        claim: "The forms needed simpler language",
+        ruledOut:
+          "the plain-English rewrite still lost people at the same point",
+      },
+      {
+        claim: "People just didn't have the documents",
+        ruledOut: "most gave up before reaching the document list at all",
+      },
+    ],
+    culprit:
+      "Nobody could see the rejection coming until after they'd already submitted.",
+    fix: "Turn the form into a guided conversation, and score the rejection risk before submission, not after.",
+    evidence: {
+      kind: "repo",
+      href: "https://github.com/Nivish-21/QueueCutter",
+      label: "Read the evidence",
+    },
+  },
+  {
+    no: "10",
+    title: "The Bot That Never Overstepped",
+    meta: "Switchboard · Telegram ops desk",
+    crime:
+      "An agent that can post messages and search the web is one bad turn away from spamming a channel or replying to a stranger. Most of the danger was never the model being wrong — it was what it was allowed to do about it.",
+    suspects: [
+      {
+        claim: "Just don't give it write access",
+        ruledOut: "then it can't do the one job it exists for",
+      },
+      {
+        claim: "Retry it if a send fails",
+        ruledOut: "a retried message is a duplicated message",
+      },
+    ],
+    culprit:
+      "An action with no boundary, and a retry with no memory of what it already did.",
+    fix: "Allowlist every real action by exact user/channel ID, and durably claim each inbound update once, so a retry can't fire it twice.",
+    evidence: {
+      kind: "repo",
+      href: "https://github.com/Nivish-21/Hermes",
+      label: "Read the evidence",
+    },
+    timeBoxed: "an afternoon",
   },
 ];
 
@@ -284,13 +336,14 @@ export const evidenceBoard: Pin[] = [
   { tool: "TypeScript", usedOn: "Cases 03, 05", primary: true },
   { tool: "Claude Code", usedOn: "Every case since 2026", primary: true },
   { tool: "Node", usedOn: "Case 05 · the chat SDK", primary: true },
-  { tool: "Postgres", usedOn: "Cases 01, 05", primary: true },
+  { tool: "Postgres", usedOn: "Cases 01, 05, 09", primary: true },
   { tool: "OSRM", usedOn: "Case 01 · the fare that lied" },
   { tool: "Twilio", usedOn: "The escalation alerts" },
   { tool: "AWS S3", usedOn: "Driver feedback uploads" },
-  { tool: "Redis", usedOn: "Case 04 · O(1) lookups" },
-  { tool: "Next.js", usedOn: "Case 08 · civichero" },
-  { tool: "React", usedOn: "Case 07 · ClaimBand" },
+  { tool: "Next.js", usedOn: "Case 04 · Scraper" },
+  { tool: "React", usedOn: "Cases 08, 09" },
+  { tool: "OpenAI API", usedOn: "Case 09 · QueueCutter" },
+  { tool: "Convex", usedOn: "Case 10 · Switchboard" },
   { tool: "Docker", usedOn: "Shipping all of it" },
   { tool: "Cursor", usedOn: "In the daily loop" },
   { tool: "PHP / Laravel", usedOn: "Where I started" },
