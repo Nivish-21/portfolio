@@ -21,9 +21,19 @@ export function CaseFile({ file }: { file: Case }) {
     <details className="group relative border border-file/[0.18] bg-gradient-to-b from-file/[0.045] to-file/[0.015] transition-colors duration-300 open:border-lamp/40 hover:border-lamp/55">
       <summary className="grid cursor-pointer list-none grid-cols-1 md:grid-cols-[190px_1fr] [&::-webkit-details-marker]:hidden">
         <span className="flex flex-col gap-1.5 border-b border-file/[0.18] p-5 md:border-b-0 md:border-r">
-          <b className="font-mono text-[11px] font-normal uppercase tracking-[0.2em] text-lamp">
-            Case {file.no}
-          </b>
+          <span className="flex flex-wrap items-center gap-2">
+            <b className="font-mono text-[11px] font-normal uppercase tracking-[0.2em] text-lamp">
+              Case {file.no}
+            </b>
+            {file.hackathon ? (
+              <span
+                className="border border-thread-text/50 px-1.5 py-0.5 font-mono text-[9.5px] font-normal uppercase tracking-[0.16em] text-thread-text"
+                title={file.hackathon}
+              >
+                Hackathon
+              </span>
+            ) : null}
+          </span>
           <Lettering className="block text-[clamp(1.25rem,2.4vw,1.7rem)] uppercase leading-tight">
             {file.title}
           </Lettering>

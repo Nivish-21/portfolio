@@ -35,6 +35,8 @@ export interface Case {
   evidence: Evidence;
   /** How long the build actually took, so it never reads as production work. */
   timeBoxed?: string;
+  /** The event it was built for, if any. Shown on the closed card, not buried in meta. */
+  hackathon?: string;
 }
 
 export const cases: Case[] = [
@@ -183,7 +185,7 @@ export const cases: Case[] = [
   {
     no: "07",
     title: "The Claim Nobody Could Trace",
-    meta: "ClaimBand · hackathon",
+    meta: "ClaimBand",
     crime:
       "An insurance claim gets approved, denied, or escalated, and afterwards nobody can say which agent decided what, or why. An unauditable decision is not a decision.",
     suspects: [
@@ -200,11 +202,12 @@ export const cases: Case[] = [
       label: "Read the evidence",
     },
     timeBoxed: "7 days",
+    hackathon: "Band of Agents Hackathon (Track 3)",
   },
   {
     no: "08",
     title: "The Pothole Nobody Reported Twice",
-    meta: "civichero · hackathon",
+    meta: "civichero",
     crime:
       "Citizens report a civic problem once. It vanishes into a queue, nothing visibly happens, and they never report anything again. The reporting was not the broken part.",
     suspects: [
@@ -221,6 +224,7 @@ export const cases: Case[] = [
       label: "Read the evidence",
     },
     timeBoxed: "7 days",
+    hackathon: "BlockseBlock Hackathon (Track 2)",
   },
   {
     no: "09",
