@@ -22,6 +22,12 @@ export type Evidence =
   | { kind: "repo"; href: string; label: string }
   | { kind: "sealed"; note: string };
 
+/** A smaller case closed inside a bigger one — its own crime, its own fix, no separate suspects. */
+export interface SubCase {
+  crime: string;
+  fix: string;
+}
+
 export interface Case {
   /** Zero-padded, and stable: the case number is how a case is referred to. */
   no: string;
@@ -37,15 +43,17 @@ export interface Case {
   timeBoxed?: string;
   /** The event it was built for, if any. Shown on the closed card, not buried in meta. */
   hackathon?: string;
+  /** Other cases closed in the same file, listed after the headline fix. */
+  subCases?: SubCase[];
 }
 
 export const cases: Case[] = [
   {
     no: "01",
     title: "The Fare That Lied",
-    meta: "CaboCab · OSRM",
+    meta: "CaboCab · production platform",
     crime:
-      "Riders were being charged for distances they had not travelled. The meter was honest. The map was honest. The number was still wrong.",
+      "Riders were being charged for distances they had not travelled. The meter was honest. The map was honest. The number was still wrong — routes were running 5 to 10% short against the real road network.",
     suspects: [
       {
         claim: "The GPS signal was noisy",
@@ -57,11 +65,42 @@ export const cases: Case[] = [
       },
     ],
     culprit: "We were measuring in a straight line. Roads are not straight.",
-    fix: "Route it through the real road network with OSRM.",
+    fix: "Self-hosted OSRM map-matching, in Docker, reconstructs the real route from raw GPS traces — correcting the 5-10% drift and cutting fare disputes on long rides.",
     evidence: {
       kind: "sealed",
       note: "Client system. The evidence stays in the building.",
     },
+    subCases: [
+      {
+        crime: "Riders saw the same message land twice. Sometimes three times.",
+        fix: "Idempotency keys on the chat SDK, so a retry is recognised, not repeated.",
+      },
+      {
+        crime:
+          "A container memory leak the team had already marked fixed. Idle driver-customer WebSockets stayed open after the admin link closed, and accumulated.",
+        fix: "Fixed the idle-connection handling, validated under real pilot load.",
+      },
+      {
+        crime:
+          "Submarine cables cut in the Red Sea (Sept 2025) took out the DigitalOcean VPS connection mid-trip.",
+        fix: "Offline-first write resilience — data queues locally and syncs automatically on reconnect.",
+      },
+      {
+        crime:
+          "A third-party Maps API was quietly firing every 10 seconds per driver device instead of once, burning through the free tier at roughly ₹12,000 a day.",
+        fix: "Traced the call pattern across the whole fleet and fixed the call logic.",
+      },
+      {
+        crime:
+          "10 production services with no eyes on them — outages surfaced only when a rider or driver complained.",
+        fix: "Automated monitoring with WhatsApp and email alerts, escalating to founders and the board, with a Twilio call as the last resort.",
+      },
+      {
+        crime:
+          "Driver feedback after a ride went nowhere — no structured way to collect it, no photos.",
+        fix: "A WhatsApp Business API pipeline with direct-to-S3 uploads, now used by support agents across 6 districts.",
+      },
+    ],
   },
   {
     no: "02",
@@ -137,53 +176,6 @@ export const cases: Case[] = [
   },
   {
     no: "05",
-    title: "The Message That Arrived Twice",
-    meta: "CaboCab · chat SDK",
-    crime:
-      "Riders saw the same message land twice. Sometimes three times. Everyone assumed a bug in the client, because that is always the easy answer.",
-    suspects: [
-      {
-        claim: "The client re-rendered",
-        ruledOut: "the duplicates were real, and in the database",
-      },
-      {
-        claim: "A double tap on send",
-        ruledOut: "it happened with no user in the room at all",
-      },
-    ],
-    culprit: "A retry that had no way of knowing it was the same message.",
-    fix: "Idempotency keys, so a retry is recognised, not repeated.",
-    evidence: {
-      kind: "sealed",
-      note: "Client system. The evidence stays in the building.",
-    },
-  },
-  {
-    no: "06",
-    title: "The Cables Cut in the Red Sea",
-    meta: "CaboCab · Sept 2025",
-    crime:
-      "In September 2025, submarine cables in the Red Sea were cut and a large part of the region's connectivity degraded. Drivers were mid-trip. The app stayed up.",
-    suspects: [
-      {
-        claim: "Wait for the network to come back",
-        ruledOut: "it did not, for a long time",
-      },
-      {
-        claim: "Fail loudly and stop",
-        ruledOut: "a driver on a live trip cannot stop",
-      },
-    ],
-    culprit:
-      "Anything that assumes the network is a bet you will eventually lose.",
-    fix: "A location sync designed offline first, well before it was needed.",
-    evidence: {
-      kind: "sealed",
-      note: "Client system. The evidence stays in the building.",
-    },
-  },
-  {
-    no: "07",
     title: "The Claim Nobody Could Trace",
     meta: "ClaimBand",
     crime:
@@ -205,7 +197,7 @@ export const cases: Case[] = [
     hackathon: "Band of Agents Hackathon (Track 3)",
   },
   {
-    no: "08",
+    no: "06",
     title: "The Pothole Nobody Reported Twice",
     meta: "civichero",
     crime:
@@ -227,7 +219,7 @@ export const cases: Case[] = [
     hackathon: "BlockseBlock Hackathon (Track 2)",
   },
   {
-    no: "09",
+    no: "07",
     title: "The Form Nobody Finished",
     meta: "QueueCutter · US/India/UK",
     crime:
@@ -253,7 +245,7 @@ export const cases: Case[] = [
     },
   },
   {
-    no: "10",
+    no: "08",
     title: "The Bot That Never Overstepped",
     meta: "Switchboard · Telegram ops desk",
     crime:
@@ -277,6 +269,7 @@ export const cases: Case[] = [
       label: "Read the evidence",
     },
     timeBoxed: "an afternoon",
+    hackathon: "World's Largest Hermes Buildathon by GrowthX®",
   },
 ];
 
@@ -299,8 +292,8 @@ export const testimony: Statement[] = [
     lines: [
       "Sole technical owner. Idea, architecture, and a ride-hailing platform live in production today.",
       "Built the chat SDK end to end. Idempotency keys, so a message can never double-deliver.",
-      "Inherited a half-built escalation watcher and finished it. Tiered alerts over WhatsApp, email, Twilio.",
-      "Built a driver feedback pipeline. WhatsApp for reporting, S3 for the image uploads.",
+      "Inherited a half-built escalation watcher and finished it. Covers 10 production services, tiered alerts over WhatsApp, email, Twilio.",
+      "Built a driver feedback pipeline. WhatsApp for reporting, S3 for the image uploads, used by support agents across 6 districts.",
       "Found and killed a Google Maps API cost anomaly by going through the Cloud billing data.",
       "Still in production, and now running in more districts through other builders who took it on.",
     ],
@@ -335,20 +328,20 @@ export interface Pin {
 }
 
 export const evidenceBoard: Pin[] = [
-  { tool: "Python", usedOn: "Cases 02, 04, 05", primary: true },
+  { tool: "Python", usedOn: "Cases 01, 02, 04", primary: true },
   { tool: "JavaScript", usedOn: "Case 01", primary: true },
   { tool: "TypeScript", usedOn: "Case 03", primary: true },
   { tool: "Claude Code", usedOn: "Every case since 2026", primary: true },
-  { tool: "Node", usedOn: "Cases 09, 10", primary: true },
-  { tool: "Postgres", usedOn: "Cases 01, 05, 09", primary: true },
-  { tool: "FastAPI", usedOn: "Case 05 · the chat SDK" },
+  { tool: "Node", usedOn: "Cases 07, 08", primary: true },
+  { tool: "Postgres", usedOn: "Cases 01, 07", primary: true },
+  { tool: "FastAPI", usedOn: "Case 01 · the chat SDK" },
   { tool: "OSRM", usedOn: "Case 01 · the fare that lied" },
-  { tool: "Twilio", usedOn: "The escalation alerts" },
-  { tool: "AWS S3", usedOn: "Driver feedback uploads" },
+  { tool: "Twilio", usedOn: "Case 01 · the escalation alerts" },
+  { tool: "AWS S3", usedOn: "Case 01 · driver feedback uploads" },
   { tool: "Next.js", usedOn: "Case 04 · Scraper" },
-  { tool: "React", usedOn: "Cases 08, 09" },
-  { tool: "OpenAI API", usedOn: "Case 09 · QueueCutter" },
-  { tool: "Convex", usedOn: "Case 10 · Switchboard" },
+  { tool: "React", usedOn: "Cases 06, 07" },
+  { tool: "OpenAI API", usedOn: "Case 07 · QueueCutter" },
+  { tool: "Convex", usedOn: "Case 08 · Switchboard" },
   { tool: "Docker", usedOn: "Case 01 · self-hosting OSRM" },
   { tool: "Cursor", usedOn: "In the daily loop" },
   { tool: "PHP / Laravel", usedOn: "One small project, briefly" },

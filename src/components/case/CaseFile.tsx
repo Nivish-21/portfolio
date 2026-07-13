@@ -105,6 +105,22 @@ export function CaseFile({ file }: { file: Case }) {
           </span>
         </p>
 
+        {file.subCases ? (
+          <div className="mt-4 border-t border-dashed border-file/20 pt-3">
+            <p className="mb-2 font-mono text-[10.5px] uppercase tracking-[0.22em] text-ash-2">
+              Also closed in this file
+            </p>
+            <ul className="flex list-none flex-col gap-2 p-0">
+              {file.subCases.map((sc) => (
+                <li key={sc.crime} className="text-[13px] leading-relaxed">
+                  <span className="text-file/70">{sc.crime}</span>{" "}
+                  <b className="text-lamp">→ {sc.fix}</b>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
         {file.evidence.kind === "repo" ? (
           <a
             href={file.evidence.href}
