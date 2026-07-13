@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { contact } from "@/lib/content";
 
 /**
  * Filing a statement.
@@ -128,13 +129,21 @@ export function ContactForm() {
       </div>
 
       {error ? (
-        <p
+        <div
           role="alert"
           aria-live="assertive"
           className="border border-thread-text bg-thread-text/10 p-3 font-mono text-xs text-thread-text"
         >
-          {error}
-        </p>
+          <p>{error}</p>
+          {/* Never strand someone who took the trouble to write. If the desk is
+              down, hand them the door out, with what they typed still intact. */}
+          <a
+            href={`mailto:${contact.email}?subject=${encodeURIComponent("A case for you")}&body=${encodeURIComponent(message)}`}
+            className="mt-2 inline-block underline decoration-dotted underline-offset-4 hover:text-lamp focus-visible:text-lamp"
+          >
+            {contact.email} →
+          </a>
+        </div>
       ) : null}
 
       <div className="flex flex-col gap-1.5">
