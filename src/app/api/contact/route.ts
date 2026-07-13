@@ -4,9 +4,17 @@ import { z } from "zod";
 import { contact } from "@/lib/content";
 
 const contactSchema = z.object({
-  name: z.string().trim().min(1, "Call sign required.").max(100, "Call sign too long."),
+  name: z
+    .string()
+    .trim()
+    .min(1, "Call sign required.")
+    .max(100, "Call sign too long."),
   email: z.string().trim().email("Invalid return channel path.").max(255),
-  message: z.string().trim().min(1, "Transmission content empty.").max(5000, "Transmission too long."),
+  message: z
+    .string()
+    .trim()
+    .min(1, "Transmission content empty.")
+    .max(5000, "Transmission too long."),
 });
 
 const RATE_LIMIT_WINDOW_MS = 60_000;
@@ -19,7 +27,7 @@ const requestLog = new Map<string, number[]>();
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
   const timestamps = (requestLog.get(ip) ?? []).filter(
-    (t) => now - t < RATE_LIMIT_WINDOW_MS
+    (t) => now - t < RATE_LIMIT_WINDOW_MS,
   );
   timestamps.push(now);
 
@@ -39,12 +47,16 @@ function isRateLimited(ip: string): boolean {
 }
 
 export async function POST(request: Request) {
-  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  const ip =
+    request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
 
   if (isRateLimited(ip)) {
     return NextResponse.json(
-      { success: false, error: "Too many transmissions. Wait before retrying." },
-      { status: 429 }
+      {
+        success: false,
+        error: "Too many transmissions. Wait before retrying.",
+      },
+      { status: 429 },
     );
   }
 
@@ -54,17 +66,25 @@ export async function POST(request: Request) {
 
     if (!parsed.success) {
       return NextResponse.json(
-        { success: false, error: parsed.error.issues[0]?.message ?? "Invalid transmission." },
-        { status: 400 }
+        {
+          success: false,
+          error: parsed.error.issues[0]?.message ?? "Invalid transmission.",
+        },
+        { status: 400 },
       );
     }
 
     const apiKey = process.env.RESEND_API_KEY;
     if (!apiKey) {
-      console.error("[Pit-to-car] RESEND_API_KEY not configured — transmission not delivered.");
+      console.error(
+        "[Pit-to-car] RESEND_API_KEY not configured — transmission not delivered.",
+      );
       return NextResponse.json(
-        { success: false, error: "Comms relay not configured. Email directly instead." },
-        { status: 503 }
+        {
+          success: false,
+          error: "Comms relay not configured. Email directly instead.",
+        },
+        { status: 503 },
       );
     }
 
@@ -81,14 +101,19 @@ export async function POST(request: Request) {
     if (sendError) {
       console.error("[Pit-to-car] Resend send failed:", sendError.message);
       return NextResponse.json(
-        { success: false, error: "Transmission failed to relay. Try emailing directly." },
-        { status: 502 }
+        {
+          success: false,
+          error: "Transmission failed to relay. Try emailing directly.",
+        },
+        { status: 502 },
       );
     }
 
     // Deliberately not logging name/email/message: these are the sender's
     // personal data and have no reason to sit in server logs.
-    console.log(`[Pit-to-car] transmission relayed at ${new Date().toISOString()}`);
+    console.log(
+      `[Pit-to-car] transmission relayed at ${new Date().toISOString()}`,
+    );
 
     return NextResponse.json({
       success: true,
@@ -99,7 +124,7 @@ export async function POST(request: Request) {
     console.error("Error handling telemetry transmission:", error);
     return NextResponse.json(
       { success: false, error: "Internal Telemetry Error" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
