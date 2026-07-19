@@ -139,7 +139,7 @@ export function useInterrogation() {
         case "/sealed":
           addLines(
             out(
-              "Four files stay shut. Three are a client's system, one is a stealth",
+              "Two files stay shut. One is a client's system, one is a stealth",
               "company, and I do not get to publish other people's code.",
               "",
               ...cases

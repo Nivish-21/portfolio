@@ -6,6 +6,7 @@ import { EvidenceBoard } from "@/components/sections/EvidenceBoard";
 import { Licence } from "@/components/sections/Licence";
 import { Contact } from "@/components/sections/Contact";
 import { CaseFile } from "@/components/case/CaseFile";
+import { AgainstTheClock } from "@/components/case/AgainstTheClock";
 import { Tab } from "@/components/case/Tab";
 import { InterrogationTerminal } from "@/components/sections/InterrogationTerminal";
 
@@ -26,6 +27,8 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        <AgainstTheClock />
 
         <EvidenceBoard />
         <Licence />

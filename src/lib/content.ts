@@ -39,10 +39,6 @@ export interface Case {
   culprit: string;
   fix: string;
   evidence: Evidence;
-  /** How long the build actually took, so it never reads as production work. */
-  timeBoxed?: string;
-  /** The event it was built for, if any. Shown on the closed card, not buried in meta. */
-  hackathon?: string;
   /** Other cases closed in the same file, listed after the headline fix. */
   subCases?: SubCase[];
 }
@@ -176,50 +172,6 @@ export const cases: Case[] = [
   },
   {
     no: "05",
-    title: "The Claim Nobody Could Trace",
-    meta: "ClaimBand",
-    crime:
-      "An insurance claim gets approved, denied, or escalated, and afterwards nobody can say which agent decided what, or why. An unauditable decision is not a decision.",
-    suspects: [
-      {
-        claim: "Use one framework for everything",
-        ruledOut: "it still could not show its working",
-      },
-    ],
-    culprit: "The agents had no shared room, so no hand-off was ever recorded.",
-    fix: "Four agents, one shared context room, a full audit trail.",
-    evidence: {
-      kind: "repo",
-      href: "https://github.com/Nivish-21/Band-of-agents",
-      label: "Read the evidence",
-    },
-    timeBoxed: "7 days",
-    hackathon: "Band of Agents Hackathon (Track 3)",
-  },
-  {
-    no: "06",
-    title: "The Pothole Nobody Reported Twice",
-    meta: "civichero",
-    crime:
-      "Citizens report a civic problem once. It vanishes into a queue, nothing visibly happens, and they never report anything again. The reporting was not the broken part.",
-    suspects: [
-      {
-        claim: "People do not care",
-        ruledOut: "they cared enough to report it the first time",
-      },
-    ],
-    culprit: "Nothing ever closed the loop back to the person who reported it.",
-    fix: "Gemini Vision triages it, an agent plans it, the community closes it.",
-    evidence: {
-      kind: "repo",
-      href: "https://github.com/Nivish-21/civichero",
-      label: "Read the evidence",
-    },
-    timeBoxed: "7 days",
-    hackathon: "BlockseBlock Hackathon (Track 2)",
-  },
-  {
-    no: "07",
     title: "The Form Nobody Finished",
     meta: "QueueCutter · US/India/UK",
     crime:
@@ -244,32 +196,51 @@ export const cases: Case[] = [
       label: "Read the evidence",
     },
   },
+];
+
+/**
+ * A build shipped against a hackathon brief, under a clock.
+ *
+ * A case is a mystery uncovered. A hackathon is not: it is a thing built fast to
+ * someone else's prompt, on a deadline. So a build has no suspects and no culprit,
+ * and — unlike a sealed case — nothing to withhold, which is why the card is open
+ * on arrival. The event and the time-box are what honestly mark it as a hackathon;
+ * the repo is public, and there is one plain line of what it does.
+ */
+export interface Build {
+  /** The project's own name. */
+  name: string;
+  /** The event it was built for. Carried on the card, so it always reads as a hackathon. */
+  event: string;
+  /** How long it actually took. Stamped like a punch-clock — the defining trait. */
+  timeBox: string;
+  /** One line: what it is, and the one interesting thing about how it works. */
+  what: string;
+  /** The repository. All public — unlike the sealed cases, none of this is withheld. */
+  repo: string;
+}
+
+export const builds: Build[] = [
   {
-    no: "08",
-    title: "The Bot That Never Overstepped",
-    meta: "Switchboard · Telegram ops desk",
-    crime:
-      "An agent that can post messages and search the web is one bad turn away from spamming a channel or replying to a stranger. Most of the danger was never the model being wrong — it was what it was allowed to do about it.",
-    suspects: [
-      {
-        claim: "Just don't give it write access",
-        ruledOut: "then it can't do the one job it exists for",
-      },
-      {
-        claim: "Retry it if a send fails",
-        ruledOut: "a retried message is a duplicated message",
-      },
-    ],
-    culprit:
-      "An action with no boundary, and a retry with no memory of what it already did.",
-    fix: "Allowlist every real action by exact user/channel ID, and durably claim each inbound update once, so a retry can't fire it twice.",
-    evidence: {
-      kind: "repo",
-      href: "https://github.com/Nivish-21/Hermes",
-      label: "Read the evidence",
-    },
-    timeBoxed: "an afternoon",
-    hackathon: "World's Largest Hermes Buildathon by GrowthX®",
+    name: "Switchboard",
+    event: "Hermes Buildathon by GrowthX®",
+    timeBox: "an afternoon",
+    what: "A Telegram ops-desk agent that can post messages and search the web, boxed inside a hard allowlist: every real action gated by exact user and channel ID, and every inbound update claimed once, so a retry can never fire it twice.",
+    repo: "https://github.com/Nivish-21/Hermes",
+  },
+  {
+    name: "ClaimBand",
+    event: "Band of Agents Hackathon · Track 3",
+    timeBox: "7 days",
+    what: "Four agents sharing one context room to triage an insurance claim, with a full audit trail — every approve, deny, or escalate traceable to which agent decided it, and why.",
+    repo: "https://github.com/Nivish-21/Band-of-agents",
+  },
+  {
+    name: "civichero",
+    event: "BlockseBlock Hackathon · Track 2",
+    timeBox: "7 days",
+    what: "Civic-issue reporting that closes the loop: Gemini Vision triages the report, an agent plans the fix, and the community confirms when it is done, so a problem reported once does not vanish into a queue.",
+    repo: "https://github.com/Nivish-21/civichero",
   },
 ];
 
@@ -332,16 +303,16 @@ export const evidenceBoard: Pin[] = [
   { tool: "JavaScript", usedOn: "Case 01", primary: true },
   { tool: "TypeScript", usedOn: "Case 03", primary: true },
   { tool: "Claude Code", usedOn: "Every case since 2026", primary: true },
-  { tool: "Node", usedOn: "Cases 07, 08", primary: true },
-  { tool: "Postgres", usedOn: "Cases 01, 07", primary: true },
+  { tool: "Node", usedOn: "Case 05, and Switchboard", primary: true },
+  { tool: "Postgres", usedOn: "Cases 01, 05", primary: true },
   { tool: "FastAPI", usedOn: "Case 01 · the chat SDK" },
   { tool: "OSRM", usedOn: "Case 01 · the fare that lied" },
   { tool: "Twilio", usedOn: "Case 01 · the escalation alerts" },
   { tool: "AWS S3", usedOn: "Case 01 · driver feedback uploads" },
   { tool: "Next.js", usedOn: "Case 04 · Scraper" },
-  { tool: "React", usedOn: "Cases 06, 07" },
-  { tool: "OpenAI API", usedOn: "Case 07 · QueueCutter" },
-  { tool: "Convex", usedOn: "Case 08 · Switchboard" },
+  { tool: "React", usedOn: "Case 05, and civichero" },
+  { tool: "OpenAI API", usedOn: "Case 05 · QueueCutter" },
+  { tool: "Convex", usedOn: "Switchboard" },
   { tool: "Docker", usedOn: "Case 01 · self-hosting OSRM" },
   { tool: "Cursor", usedOn: "In the daily loop" },
   { tool: "PHP / Laravel", usedOn: "One small project, briefly" },
