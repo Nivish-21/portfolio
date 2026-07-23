@@ -62,6 +62,21 @@ export function Testimony() {
             <p className="mt-4 border-t border-void/20 pt-3 font-mono text-[10.5px] uppercase tracking-[0.14em] text-[#8d8677]">
               {s.signOff}
             </p>
+
+            {s.link ? (
+              <a
+                href={s.link}
+                className="group/ev mt-3 inline-flex items-center gap-2 border border-lamp/45 px-4 py-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-lamp transition-colors hover:bg-lamp hover:text-on-lamp focus-visible:bg-lamp focus-visible:text-on-lamp"
+              >
+                Visit the site
+                <b
+                  aria-hidden="true"
+                  className="transition-transform group-hover/ev:translate-x-1"
+                >
+                  →
+                </b>
+              </a>
+            ) : null}
           </article>
         ))}
       </div>

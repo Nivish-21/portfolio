@@ -252,6 +252,8 @@ export interface Statement {
   lines: string[];
   /** Text that must be blacked out. The stealth company genuinely cannot be named. */
   redacted?: string;
+  /** The live site, when there is one to point at. */
+  link?: string;
   signOff: string;
 }
 
@@ -282,6 +284,19 @@ export const testimony: Statement[] = [
     ],
     redacted: "a market I cannot name",
     signOff: "Statement withheld in part · by request",
+  },
+  {
+    org: "Morsel",
+    role: "Freelance Web Developer",
+    dates: "Jul 2026",
+    lines: [
+      "Rebuilt the whole site from scratch off a single handed-off HTML file — no template, no iteration after.",
+      "Delivered end to end in a week; the actual build ran two focused days.",
+      "Took it through deploy and submitted it for Google Search Console indexing.",
+      "Only changes since launch have been wording. No structural rework.",
+    ],
+    link: "https://www.morsel.co.in/",
+    signOff: "Statement of the witness · signed NVR",
   },
 ];
 
@@ -327,12 +342,6 @@ export interface Credential {
 }
 
 export const credentials: Credential[] = [
-  {
-    issuer: "Palantir",
-    name: "Winter Tech Fellowship",
-    issued: "Jul 2026",
-    verifyUrl: "https://verify.skilljar.com/c/8pz5mykb5cee",
-  },
   {
     issuer: "Anthropic",
     name: "AI Fluency: Framework & Foundations",
