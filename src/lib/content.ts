@@ -148,30 +148,6 @@ export const cases: Case[] = [
   },
   {
     no: "04",
-    title: "The Job That Died at Row 60,000",
-    meta: "Scraper · 100k+ rows",
-    crime:
-      "A bulk image pull across a very large dataset. It ran for hours, fell over near the end, and there was no way to do anything but start again from zero.",
-    suspects: [
-      {
-        claim: "The network dropped",
-        ruledOut: "retries did not save the run",
-      },
-      {
-        claim: "It ran out of memory",
-        ruledOut: "it died at the same place with room to spare",
-      },
-    ],
-    culprit: "O(n) lookups, and no memory of where it had got to.",
-    fix: "O(1) lookups, checkpointed. Crash it, resume it, same row.",
-    evidence: {
-      kind: "repo",
-      href: "https://github.com/Nivish-21/Scraper",
-      label: "Read the evidence",
-    },
-  },
-  {
-    no: "05",
     title: "The Form Nobody Finished",
     meta: "QueueCutter · US/India/UK",
     crime:
@@ -244,6 +220,39 @@ export const builds: Build[] = [
   },
 ];
 
+/**
+ * Freelance work: paid, to someone else's brief, on someone else's system.
+ * Like a hackathon build there is no mystery to withhold — but unlike one,
+ * there's no clock either. Just a client and a thing actually delivered.
+ */
+export interface FreelanceJob {
+  client: string;
+  role: string;
+  dates: string;
+  what: string;
+  link: { label: string; href: string };
+}
+
+export const freelanceWork: FreelanceJob[] = [
+  {
+    client: "Morsel",
+    role: "Freelance Web Developer",
+    dates: "Jul 2026",
+    what: "Rebuilt the whole site from scratch off a single handed-off HTML file, deployed it, and submitted it for Google Search Console indexing. Delivered end to end in a week; the actual build ran two focused days.",
+    link: { label: "Visit the site", href: "https://www.morsel.co.in/" },
+  },
+  {
+    client: "Scraper",
+    role: "Freelance Developer",
+    dates: "Mar 2026",
+    what: "A bulk image-scraping job that died at row 60,000 under O(n) lookups with no memory of where it had got to. Rebuilt with O(1) lookups and checkpointing, so a crash resumes from the same row, not zero.",
+    link: {
+      label: "Read the code",
+      href: "https://github.com/Nivish-21/Scraper",
+    },
+  },
+];
+
 /** A signed statement. `redacted` blacks out in the markup, honestly. */
 export interface Statement {
   org: string;
@@ -252,8 +261,6 @@ export interface Statement {
   lines: string[];
   /** Text that must be blacked out. The stealth company genuinely cannot be named. */
   redacted?: string;
-  /** The live site, when there is one to point at. */
-  link?: string;
   signOff: string;
 }
 
@@ -285,19 +292,6 @@ export const testimony: Statement[] = [
     redacted: "a market I cannot name",
     signOff: "Statement withheld in part · by request",
   },
-  {
-    org: "Morsel",
-    role: "Freelance Web Developer",
-    dates: "Jul 2026",
-    lines: [
-      "Rebuilt the whole site from scratch off a single handed-off HTML file — no template, no iteration after.",
-      "Delivered end to end in a week; the actual build ran two focused days.",
-      "Took it through deploy and submitted it for Google Search Console indexing.",
-      "Only changes since launch have been wording. No structural rework.",
-    ],
-    link: "https://www.morsel.co.in/",
-    signOff: "Statement of the witness · signed NVR",
-  },
 ];
 
 /**
@@ -314,19 +308,19 @@ export interface Pin {
 }
 
 export const evidenceBoard: Pin[] = [
-  { tool: "Python", usedOn: "Cases 01, 02, 04", primary: true },
+  { tool: "Python", usedOn: "Cases 01, 02, and Scraper", primary: true },
   { tool: "JavaScript", usedOn: "Case 01", primary: true },
   { tool: "TypeScript", usedOn: "Case 03", primary: true },
   { tool: "Claude Code", usedOn: "Every case since 2026", primary: true },
-  { tool: "Node", usedOn: "Case 05, and Switchboard", primary: true },
-  { tool: "Postgres", usedOn: "Cases 01, 05", primary: true },
+  { tool: "Node", usedOn: "Case 04, and Switchboard", primary: true },
+  { tool: "Postgres", usedOn: "Cases 01, 04", primary: true },
   { tool: "FastAPI", usedOn: "Case 01 · the chat SDK" },
   { tool: "OSRM", usedOn: "Case 01 · the fare that lied" },
   { tool: "Twilio", usedOn: "Case 01 · the escalation alerts" },
   { tool: "AWS S3", usedOn: "Case 01 · driver feedback uploads" },
-  { tool: "Next.js", usedOn: "Case 04 · Scraper" },
-  { tool: "React", usedOn: "Case 05, and civichero" },
-  { tool: "OpenAI API", usedOn: "Case 05 · QueueCutter" },
+  { tool: "Next.js", usedOn: "Freelance work · Scraper" },
+  { tool: "React", usedOn: "Case 04, and civichero" },
+  { tool: "OpenAI API", usedOn: "Case 04 · QueueCutter" },
   { tool: "Convex", usedOn: "Switchboard" },
   { tool: "Docker", usedOn: "Case 01 · self-hosting OSRM" },
   { tool: "Cursor", usedOn: "In the daily loop" },
@@ -368,6 +362,7 @@ export const takingCases = [
   "Full-stack",
   "Technical lead",
   "Founding engineer",
+  "Freelance",
 ];
 
 export const education = {

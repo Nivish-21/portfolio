@@ -7,6 +7,7 @@ import { Licence } from "@/components/sections/Licence";
 import { Contact } from "@/components/sections/Contact";
 import { CaseFile } from "@/components/case/CaseFile";
 import { AgainstTheClock } from "@/components/case/AgainstTheClock";
+import { FreelanceWork } from "@/components/case/FreelanceWork";
 import { Tab } from "@/components/case/Tab";
 import { InterrogationTerminal } from "@/components/sections/InterrogationTerminal";
 
@@ -29,6 +30,7 @@ export default function Home() {
         </section>
 
         <AgainstTheClock />
+        <FreelanceWork />
 
         <EvidenceBoard />
         <Licence />
